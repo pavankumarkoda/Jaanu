@@ -246,7 +246,7 @@
 
         </div>
 
-    <script>
+  <script>
         const pages = document.querySelectorAll('.comic-page');
         const comicBook = document.getElementById('comic-book');
         const leftIndicator = document.getElementById('left-indicator');
@@ -292,23 +292,27 @@
                 const oldPage = pages[oldPageIndex];
                 const newPage = pages[currentPageIndex];
 
-                // 1. Prepare the new page (start rotated, then enable transition)
-                newPage.classList.add('active', 'next-page');
-                setTimeout(() => {
-                    newPage.style.transition = `transform ${flipDuration / 1000}s ease-in-out`;
-                    oldPage.classList.add('flipping-right');
-                }, 10);
+                // 1. Prepare the new page (start rotated and visible)
+                newPage.classList.add('active'); 
+                newPage.style.display = 'flex'; 
+                newPage.classList.add('next-page'); // Sets initial rotation of 180deg (hidden)
+                
+                // 2. Force a repaint/reflow (crucial for CSS transitions to work correctly)
+                newPage.offsetWidth; 
 
-                // 2. Clean up classes after the flip is complete
+                // 3. Start the transition (flipping the old page and rotating the new page)
+                oldPage.classList.add('flipping-right'); // Old page flips away
+                newPage.classList.remove('next-page'); // New page rotates to 0deg (becomes visible)
+
+
+                // 4. Clean up classes after the flip is complete
                 setTimeout(() => {
                     // Reset old page
                     oldPage.classList.remove('active', 'flipping-right');
                     oldPage.style.display = 'none';
 
-                    // Reset new page
-                    newPage.classList.remove('next-page');
-                    newPage.style.transition = ''; // Remove transition for next time it's prepared
-
+                    // Clean up new page (it remains active)
+                    
                     isFlipping = false;
                     showIndicators();
                 }, flipDuration);
@@ -324,22 +328,26 @@
                 const oldPage = pages[oldPageIndex];
                 const newPage = pages[currentPageIndex];
 
-                // 1. Prepare the new page (start rotated, then enable transition)
-                newPage.classList.add('active', 'prev-page');
-                setTimeout(() => {
-                    newPage.style.transition = `transform ${flipDuration / 1000}s ease-in-out`;
-                    oldPage.classList.add('flipping-left');
-                }, 10);
+                // 1. Prepare the new page (start rotated and visible)
+                newPage.classList.add('active');
+                newPage.style.display = 'flex'; 
+                newPage.classList.add('prev-page'); // Sets initial rotation of -180deg (hidden)
 
-                // 2. Clean up classes after the flip is complete
+                // 2. Force a repaint/reflow
+                newPage.offsetWidth; 
+
+                // 3. Start the transition (flipping the old page and rotating the new page)
+                oldPage.classList.add('flipping-left'); // Old page flips away
+                newPage.classList.remove('prev-page'); // New page rotates to 0deg (becomes visible)
+
+
+                // 4. Clean up classes after the flip is complete
                 setTimeout(() => {
                     // Reset old page
                     oldPage.classList.remove('active', 'flipping-left');
                     oldPage.style.display = 'none';
 
-                    // Reset new page
-                    newPage.classList.remove('prev-page');
-                    newPage.style.transition = ''; // Remove transition for next time it's prepared
+                    // Clean up new page (it remains active)
 
                     isFlipping = false;
                     showIndicators();
@@ -398,6 +406,13 @@
             const containerRect = comicBook.getBoundingClientRect();
             const clickX = e.clientX - containerRect.left;
             const center = containerRect.width / 2;
+
+            // Prevent taps from propagating if a swipe was detected
+            if (e.type === 'click' && (touchstartX !== 0 || touchendX !== 0)) {
+                 touchstartX = 0; // Reset state for next time
+                 touchendX = 0;
+                 return;
+            }
 
             if (clickX > center && currentPageIndex < pages.length - 1) {
                 // Right half tap
