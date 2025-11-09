@@ -3,69 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartoon Comic Book</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&family=Creepster&display=swap" rel="stylesheet">
+    <title>Doodle Comic Reader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- General Body & Container Styling (Comic Book Feel) --- */
+        /* --- General Body & Container Styling (E-Reader Look) --- */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #333; /* Darker background for contrast, like a shelf */
-            font-family: 'Permanent Marker', cursive; /* A more casual, hand-drawn font */
-            perspective: 2000px; /* Stronger perspective for dramatic flips */
+            /* Match the light background outside the mirror */
+            background-color: #f5f5f5; 
+            font-family: 'Roboto', sans-serif;
+            perspective: 1800px;
             user-select: none;
-            overflow: hidden; /* Hide any overflow from page edges */
         }
 
+        /* NEW: Styling to mimic the doodle's octagonal, brown frame */
         .comic-container {
             position: relative;
             width: 90%; 
-            max-width: 480px; /* Slightly wider for comic panels */
+            max-width: 450px; 
             height: 90vh;
-            max-height: 720px; /* Slightly taller */
+            max-height: 700px;
             
-            /* Rougher, more dynamic comic book shadow */
-            box-shadow: 
-                -10px 10px 0 #555, /* Offset shadow for comic depth */
-                -20px 20px 0 #888, /* Another layer */
-                0 0 0 5px #f0e68c; /* Khaki border, like worn paper edges */
-            border-radius: 5px; /* Less rounded, more like paper */
-            background-color: #fefefe; /* Clean white base for pages */
+            /* --- Mirror Frame Styling --- */
+            /* Using a solid color similar to the brown in the doodle */
+            background-color: #966f33; 
+            border-radius: 0; /* Removing default border radius */
+            
+            /* Mimic the octagonal shape of the mirror with clip-path (approximate) */
+            clip-path: polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%);
+            
+            /* Shadow for depth like the frame */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 0 10px rgba(150, 111, 51, 0.7) inset; 
             overflow: visible; 
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text x="0" y="28" style="font-size: 28px;">👆</text></svg>') 16 16, pointer; /* Custom pointer */
+            cursor: pointer; 
+            padding: 15px; /* Padding for the frame's thickness */
+            box-sizing: border-box;
         }
         
         /* -------------------------------------- */
-        /* Core Page-Flip CSS (Comic Style) */
+        /* Core Page-Flip CSS (Bottom Corner Focus) */
         /* -------------------------------------- */
         .comic-page {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 15px;
+            left: 15px;
+            /* Match the size of the inner content area defined by padding in the container */
+            width: calc(100% - 30px); 
+            height: calc(100% - 30px);
             display: none; 
             box-sizing: border-box;
-            background-color: #fffacd; /* LemonChiffon for a slight paper yellow */
-            padding: 10px; /* Slightly less padding to maximize panel space */
-            border-radius: 3px; /* Sharper corners */
-            border: 2px dashed #a0522d; /* Sienna dashed border, like comic panel lines */
+            /* Lighter background for the page itself (like sketch paper) */
+            background-color: #f7f3e8; 
+            border-radius: 0; /* Keep the page corners sharp */
             
+            /* Default: Start rotation from the left center for neutral state */
             transform-origin: left center;
             transform: rotateY(0deg); 
-            transition: transform 0.6s cubic-bezier(0.8, -0.4, 0.2, 1.4); /* More "springy" comic flip */
+            transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
             backface-visibility: hidden;
             z-index: 1; 
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* Stronger page shadow */
-
-            /* Subtle halftone/paper texture overlay */
-            background-image: 
-                radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, #f8f8f8 1px, transparent 1px);
-            background-size: 8px 8px, 8px 8px; /* Denser texture */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
         }
 
         .comic-page.active {
@@ -74,9 +75,9 @@
             z-index: 2; 
         }
 
-        /* --- NEXT PAGE TURN (Flipping right, anchored at Bottom Left) --- */
+        /* Page Flip Styles (no change needed here, as the logic is already bottom-corner anchored) */
         .comic-page.flipping-right {
-            transform-origin: left bottom; 
+            transform-origin: left bottom;
             transform: rotateY(-180deg);
             z-index: 10; 
         }
@@ -85,10 +86,9 @@
             transform-origin: left bottom;
             transform: rotateY(180deg); 
         }
-
-        /* --- PREVIOUS PAGE TURN (Flipping left, anchored at Bottom Right) --- */
+        
         .comic-page.flipping-left {
-            transform-origin: right bottom; 
+            transform-origin: right bottom;
             transform: rotateY(180deg);
             z-index: 10;
         }
@@ -99,181 +99,153 @@
         }
 
         /* -------------------------------------- */
-        /* Content & Indicator Styling (Comic Look) */
+        /* Content & Indicator Styling */
         /* -------------------------------------- */
         .page-content {
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             text-align: center;
-            background-color: #fcf8e3; /* Slightly warmer inner page color */
-            border: 3px solid #000; /* Bold black comic panel border */
-            border-radius: 0; /* Sharp comic panel corners */
-            padding: 20px;
+            /* Use a paper-like color inside */
+            background-color: #fffaf0; 
+            /* Inner border line to simulate the drawing border */
+            border: 2px solid #222; 
+            border-radius: 4px; 
+            padding: 25px;
             box-sizing: border-box;
-            box-shadow: 2px 2px 0 #555; /* Panel shadow for depth */
         }
         
         .page-content h3 { 
             margin-top: 0; 
-            color: #e74c3c; /* Red text for impact */
-            font-family: 'Bangers', cursive; /* Classic comic title font */
-            font-size: 3em; /* HUGE headers */
-            text-transform: uppercase;
-            text-shadow: 
-                -2px -2px 0 #000, 
-                2px -2px 0 #000, 
-                -2px 2px 0 #000, 
-                2px 2px 0 #000; /* Comic outline text */
-            line-height: 1;
-            margin-bottom: 25px; 
-            letter-spacing: 2px;
+            color: #1a1a1a; /* Dark ink color */
+            font-family: 'Bangers', cursive; 
+            font-size: 2.2em; 
+            /* Slight, subtle text shadow for a doodle effect */
+            text-shadow: 1px 1px 0 #f7f3e8, 2px 2px 0 rgba(0,0,0,0.1); 
+            margin-bottom: 20px; 
         }
-
         .page-content p { 
-            color: #2c3e50; /* Darker blue-gray for readability */
-            font-family: 'Permanent Marker', cursive; /* Hand-drawn feel */
-            font-size: 1.3em; /* Larger body text */
-            line-height: 1.3;
-            margin: 10px 0; 
-            background-color: rgba(255, 255, 255, 0.9); /* Slight background for readability over textures */
-            padding: 5px 10px;
-            border-radius: 5px;
-            box-shadow: 1px 1px 0 rgba(0,0,0,0.2); /* Subtle pop for text boxes */
+            color: #333; /* Ink color */
+            font-family: 'Roboto', sans-serif; 
+            font-size: 1.1em; 
+            line-height: 1.4; 
+            margin: 8px 0; 
         }
-        
-        .page-content p strong {
-            color: #c0392b; /* Bold text color */
-        }
-
         .icon-placeholder { 
-            font-size: 5em; /* Gigantic icons */
-            margin: 30px 0; 
-            color: #f1c40f; /* Yellow accent for pop */
-            text-shadow: 3px 3px 0 #000; /* Outline for icons too */
+            font-size: 4em; 
+            margin: 25px 0; 
+            /* Used a slightly less harsh red for the doodle vibe */
+            color: #cc4444; 
         }
 
-        /* --- Temporary Indicators (Comic Style) --- */
         .swipe-indicator {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 4em; /* Larger indicators */
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            z-index: 30; 
-            pointer-events: none;
-            background-color: #f1c40f; /* Comic yellow background */
-            color: #c0392b; /* Red text for pointers */
-            border: 3px solid #000; /* Bold black border */
-            border-radius: 10px; /* Rounded comic bubble look */
-            padding: 8px 15px;
-            box-shadow: 5px 5px 0 #000; /* Stronger comic shadow */
-            text-shadow: 1px 1px 0 #fff; /* White outline on emoji */
+            position: absolute; top: 50%; transform: translateY(-50%);
+            font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out;
+            z-index: 30; pointer-events: none;
+            /* Simple dark background for the indicator */
+            background-color: rgba(0, 0, 0, 0.7); 
+            color: white; border-radius: 6px; 
+            padding: 5px 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
-        .swipe-indicator.show { 
-            opacity: 1;
-            font-size: 4em; /* No size change, just opacity */
-        }
-
-        #left-indicator { left: -50px; } /* Pull them further out to stand alone */
-        #right-indicator { right: -50px; }
+        .swipe-indicator.show { opacity: 0.9; font-size: 3em; }
+        #left-indicator { left: 25px; } 
+        #right-indicator { right: 25px; }
     </style>
 </head>
 <body>
 
     <div class="comic-container" id="comic-book">
-        <span id="left-indicator" class="swipe-indicator">CLICK/SWIPE👈</span>
-        <span id="right-indicator" class="swipe-indicator">CLICK/SWIPE👉</span>
+        <span id="left-indicator" class="swipe-indicator">👈</span>
+        <span id="right-indicator" class="swipe-indicator">👉</span>
 
         <div class="comic-page active" data-page="1">
             <div class="page-content">
-                <h3>PAGE 1: THE BEGINNING!</h3>
-                <p><strong>HEY YOU!</strong> Tap the right half or swipe left to turn the page!</p>
+                <h3>PAGE 1: THE BEGINNING</h3>
+                <p>Welcome! **Tap the right half or swipe left** to turn the page.</p>
                 <p class="icon-placeholder">🌟</p>
-                <p>Our hero's amazing journey is about to begin, <strong>POW!</strong></p>
+                <p>Our hero's journey is about to unfold...</p>
             </div>
         </div>
 
         <div class="comic-page" data-page="2">
             <div class="page-content">
-                <h3>PAGE 2: THE MYSTERY CALL!</h3>
-                <p>A strange signal in the night! A clue to a chilling secret!</p>
+                <h3>PAGE 2: THE CALL</h3>
+                <p>A whisper in the darkness. A clue to a mystery.</p>
                 <p class="icon-placeholder">📞</p>
-                <p>The time for adventure is **NOW!**</p>
+                <p>The time for action is now.</p>
             </div>
         </div>
         
         <div class="comic-page" data-page="3">
             <div class="page-content">
-                <h3>PAGE 3: A NEW ALLY!</h3>
-                <p>BAM! A surprising new friend steps out of the shadowy alley!</p>
+                <h3>PAGE 3: A NEW ALLY</h3>
+                <p>KAPOW! A surprising friend steps out of the shadows.</p>
                 <p class="icon-placeholder">🤝</p>
-                <p>They must unite forces to conquer the evil, **ZAP!**</p>
+                <p>They must work together to succeed.</p>
             </div>
         </div>
         
         <div class="comic-page" data-page="4">
             <div class="page-content">
-                <h3>PAGE 4: THE MONSTROUS OBSTACLE!</h3>
-                <p>A giant, impossible wall blocks their path! OH NO!</p>
+                <h3>PAGE 4: THE OBSTACLE</h3>
+                <p>A massive roadblock appears in their path!</p>
                 <p class="icon-placeholder">🚧</p>
-                <p>This challenge demands a clever plan, **QUICK!**</p>
+                <p>This challenge requires clever thinking.</p>
             </div>
         </div>
 
         <div class="comic-page" data-page="5">
             <div class="page-content">
-                <h3>PAGE 5: TURNING POINT!</h3>
-                <p>Halfway there, HEROES! A tough choice must be made!</p>
+                <h3>PAGE 5: TURNING POINT</h3>
+                <p>Halfway there! A difficult decision must be made.</p>
                 <p class="icon-placeholder">🧭</p>
-                <p>The fate of the world hangs in the balance, **GULP!**</p>
+                <p>The fate of the mission hangs in the balance.</p>
             </div>
         </div>
 
         <div class="comic-page" data-page="6">
             <div class="page-content">
-                <h3>PAGE 6: THE EPIC CHASE!</h3>
-                <p>VROOM! A high-octane pursuit through the bustling city!</p>
+                <h3>PAGE 6: THE CHASE</h3>
+                <p>VROOM! A high-speed pursuit through the city streets!</p>
                 <p class="icon-placeholder">🏎️</p>
-                <p>They can't afford to lose them now, **FASTER!**</p>
+                <p>They can't afford to slow down now.</p>
             </div>
         </div>
         
         <div class="comic-page" data-page="7">
             <div class="page-content">
-                <h3>PAGE 7: THE SECRET REVEALED!</h3>
-                <p>The mask falls! The TRUE VILLAIN is finally known!</p>
+                <h3>PAGE 7: THE SECRET REVEALED</h3>
+                <p>The mask comes off! The true enemy is finally known.</p>
                 <p class="icon-placeholder">🎭</p>
-                <p>A shocking twist no one expected, **BLAM!**</p>
+                <p>A twist no one saw coming!</p>
             </div>
         </div>
         
         <div class="comic-page" data-page="8">
             <div class="page-content">
-                <h3>PAGE 8: PREPARATIONS!</h3>
-                <p>The ultimate showdown is near! Gear up for battle!</p>
+                <h3>PAGE 8: PREPARATIONS</h3>
+                <p>The final stand is imminent. Gear up!</p>
                 <p class="icon-placeholder">🛡️</p>
-                <p>One last chance to train and strategize, **SMASH!**</p>
+                <p>One last chance to train and strategize.</p>
             </div>
         </div>
 
         <div class="comic-page" data-page="9">
             <div class="page-content">
-                <h3>PAGE 9: THE CLIMAX!</h3>
-                <p>CRASH! The greatest battle has erupted! Power vs. Power!</p>
+                <h3>PAGE 9: THE CLIMAX</h3>
+                <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
                 <p class="icon-placeholder">💥</p>
-                <p>The tension is unbearable, **WHOOSH!**</p>
+                <p>The tension is unbearable!</p>
             </div>
         </div>
 
         <div class="comic-page" data-page="10">
             <div class="page-content">
-                <h3>PAGE 10: VICTORY & CONCLUSION!</h3>
-                <p>The dust settles! The world is safe!</p>
+                <h3>PAGE 10: VICTORY & CONCLUSION</h3>
+                <p>The dust settles. The world is safe. **Tap or swipe right to restart!**</p>
                 <p class="icon-placeholder">✅</p>
-                <p>Thanks for reading, TRUE BELIEVER! Swipe right to restart!</p>
+                <p>Thanks for reading! To be continued...</p>
             </div>
         </div>
     </div>
@@ -287,17 +259,12 @@
         const flipDuration = 600; 
         let isFlipping = false;
 
+        // Variables for Swipe Detection
         let touchstartX = 0;
         let touchendX = 0;
         const swipeThreshold = 50; 
 
-        // --- Utility to clean up classes after flip ---
-        function resetPageClasses(page) {
-             page.classList.remove('flipping-right', 'flipping-left', 'next-page', 'prev-page');
-             page.style.transformOrigin = 'left center'; 
-        }
-
-        // --- Indicator Logic (Only on Page 1) ---
+        // --- Indicator Logic ---
         function showIndicators() {
             leftIndicator.classList.remove('show');
             rightIndicator.classList.remove('show');
@@ -319,22 +286,21 @@
                 currentPageIndex++;
                 const newPage = pages[currentPageIndex];
 
+                // 1. Prepare the new page
                 newPage.classList.add('active', 'next-page'); 
                 newPage.style.display = 'flex'; 
                 newPage.offsetWidth; 
 
+                // 2. Start the transition
                 oldPage.classList.add('flipping-right'); 
                 newPage.classList.remove('next-page'); 
 
+                // 3. Clean up
                 setTimeout(() => {
-                    oldPage.classList.remove('active');
+                    oldPage.classList.remove('active', 'flipping-right');
                     oldPage.style.display = 'none';
-                    resetPageClasses(oldPage);
                     isFlipping = false;
                 }, flipDuration);
-            } else if (currentPageIndex === pages.length - 1 && !isFlipping) {
-                // If on the last page, loop back to the first page (or reset)
-                resetComic();
             }
         }
 
@@ -345,17 +311,19 @@
                 currentPageIndex--;
                 const newPage = pages[currentPageIndex];
                 
+                // 1. Prepare the new page
                 newPage.classList.add('active', 'prev-page');
                 newPage.style.display = 'flex';
                 newPage.offsetWidth; 
 
+                // 2. Start the transition
                 oldPage.classList.add('flipping-left'); 
                 newPage.classList.remove('prev-page'); 
 
+                // 3. Clean up
                 setTimeout(() => {
-                    oldPage.classList.remove('active');
+                    oldPage.classList.remove('active', 'flipping-left');
                     oldPage.style.display = 'none';
-                    resetPageClasses(oldPage);
                     isFlipping = false;
 
                     if (currentPageIndex === 0) {
@@ -363,31 +331,6 @@
                     }
                 }, flipDuration);
             }
-        }
-
-        // --- Reset Comic Function (for the last page) ---
-        function resetComic() {
-            if (isFlipping) return;
-            isFlipping = true; // Prevent interaction during reset
-            const oldPage = pages[currentPageIndex];
-
-            // Start a "reset" flip animation (e.g., flip last page like going next)
-            oldPage.classList.add('flipping-right'); 
-
-            setTimeout(() => {
-                oldPage.classList.remove('active', 'flipping-right');
-                oldPage.style.display = 'none';
-                resetPageClasses(oldPage);
-                
-                currentPageIndex = 0;
-                const firstPage = pages[0];
-                firstPage.classList.add('active');
-                firstPage.style.display = 'flex';
-                resetPageClasses(firstPage); // Ensure first page is clean
-
-                isFlipping = false;
-                showIndicators(); // Show indicators on the first page
-            }, flipDuration);
         }
         
         // --- Input Handlers ---
@@ -433,11 +376,7 @@
                 nextPage();
             } else if (clickXRelative < center - margin && currentPageIndex > 0) {
                 prevPage();
-            } else if (currentPageIndex === pages.length - 1) {
-                // If on last page and tapping anywhere, restart the comic
-                resetComic();
-            }
-            else if (currentPageIndex === 0) {
+            } else if (currentPageIndex === 0) {
                 showIndicators(); 
             }
         }
@@ -462,3 +401,4 @@
         showIndicators();
     </script>
 </body>
+</html>
