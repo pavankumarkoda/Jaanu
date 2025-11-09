@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Reader Comic: 10 Pages</title>
+    <title>E-Reader Comic: 10 Pages (Flipping)</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <style>
         body {
@@ -14,6 +14,8 @@
             margin: 0;
             background-color: #f5f5dc; /* Beige/sepia background */
             font-family: 'Bangers', cursive, sans-serif;
+            /* Enable perspective for 3D flip effect */
+            perspective: 1500px; 
         }
 
         .comic-container {
@@ -26,32 +28,80 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             border: 1px solid #ccc;
             background-color: white;
-            overflow: hidden;
+            /* Changed overflow to visible to allow 3D rotation without clipping */
+            overflow: visible; 
             border-radius: 5px;
         }
 
+        /* -------------------------------------- */
+        /* Page-Flip CSS */
+        /* -------------------------------------- */
         .comic-page {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
             display: none; 
             box-sizing: border-box;
             background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px; /* Padding inside the page */
+            padding: 10px;
+            
+            /* Initial state for 3D flip */
+            transform-origin: left center; /* Rotate from the left edge */
+            transform: rotateY(0deg); 
+            transition: transform 0.8s ease-in-out, z-index 0s 0.8s; /* Longer transition */
+            backface-visibility: hidden;
         }
 
         .comic-page.active {
-            display: flex; /* Active page visible */
+            display: flex;
             z-index: 10;
+            transform: rotateY(0deg); 
+            transition: transform 0.8s ease-in-out;
         }
 
-        /* Styling for the single portrait image/content per page */
+        .comic-page.flipping-right {
+            /* The page being flipped (the old page) */
+            transform: rotateY(-180deg);
+            z-index: 20; /* Keep the flipping page on top */
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .comic-page.flipping-left {
+            /* The page being flipped (the old page) - rotate from right for consistency */
+            transform-origin: right center;
+            transform: rotateY(180deg);
+            z-index: 20;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        /* The page that appears after the flip */
+        .comic-page.next-page, .comic-page.prev-page {
+            /* This is the new active page, reset the transform */
+            transform: rotateY(0deg);
+            transition: transform 0.8s ease-in-out;
+        }
+
+        /* For the next page animation (coming from the right) */
+        .comic-page.next-page {
+            transform-origin: left center;
+            transform: rotateY(180deg); /* Start hidden/rotated to simulate being under the flip */
+        }
+        
+        /* For the prev page animation (coming from the left) */
+        .comic-page.prev-page {
+            transform-origin: right center;
+            transform: rotateY(-180deg); /* Start hidden/rotated */
+        }
+        /* -------------------------------------- */
+        /* END Page-Flip CSS */
+        /* -------------------------------------- */
+
+        /* General Content Styling */
         .page-content {
             width: 100%;
             height: 100%;
@@ -75,12 +125,19 @@
 
         .page-content p {
             color: #333;
-            font-family: serif; /* More readable font for body text */
+            font-family: serif; 
             font-size: 1.1em;
             margin: 5px 0;
         }
         
-        /* Navigation Buttons - Opaque and Overlaid */
+        .icon-placeholder {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+        
+        /* -------------------------------------- */
+        /* Navigation Buttons & Indicators CSS */
+        /* -------------------------------------- */
         .nav-button {
             position: absolute;
             top: 0; 
@@ -90,7 +147,7 @@
             color: white;
             border: none;
             cursor: pointer;
-            z-index: 20;
+            z-index: 20; /* Above the page content */
             font-size: 0; 
             transition: background-color 0.1s;
         }
@@ -103,15 +160,9 @@
             cursor: default;
         }
 
-        #prev-button {
-            left: 0;
-        }
-
-        #next-button {
-            right: 0;
-        }
+        #prev-button { left: 0; }
+        #next-button { right: 0; }
         
-        /* Visible indicators for navigation */
         .nav-button::after {
             content: attr(data-icon);
             position: absolute;
@@ -124,24 +175,36 @@
             font-family: sans-serif;
         }
         
-        #prev-button::after {
-            left: 5px;
-        }
+        #prev-button::after { left: 5px; }
+        #next-button::after { right: 5px; }
         
-        #next-button::after {
-            right: 5px;
-        }
-        
-        /* Specific content styling for placeholders */
-        .icon-placeholder {
+        /* Swipe/Tap Indicator CSS */
+        .swipe-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
             font-size: 3em;
-            margin: 20px 0;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 30; /* Ensure indicator is on top of everything */
+            pointer-events: none;
         }
+
+        .swipe-indicator.show {
+            opacity: 0.8;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #left-indicator { left: -40px; }
+        #right-indicator { right: -40px; }
     </style>
 </head>
 <body>
 
     <div class="comic-container">
+        <span id="left-indicator" class="swipe-indicator" data-icon="👈"></span>
+        <span id="right-indicator" class="swipe-indicator" data-icon="👉"></span>
+
         <div class="comic-page active" data-page="1">
             <div class="page-content">
                 <h3>PAGE 1: THE BEGINNING</h3>
@@ -232,60 +295,149 @@
             </div>
         </div>
 
-        <button id="prev-button" class="nav-button" disabled data-icon="&#9664;"></button>
-        <button id="next-button" class="nav-button" data-icon="&#9654;"></button>
+        <button id="prev-button" class="nav-button" disabled></button>
+        <button id="next-button" class="nav-button"></button>
     </div>
 
     <script>
         const pages = document.querySelectorAll('.comic-page');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
+        const leftIndicator = document.getElementById('left-indicator');
+        const rightIndicator = document.getElementById('right-indicator');
         let currentPageIndex = 0;
+        const flipDuration = 800; // Must match CSS transition duration (0.8s)
 
-        function updatePageDisplay() {
-            // Hide all pages
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show the current page
-            if (pages[currentPageIndex]) {
-                pages[currentPageIndex].classList.add('active');
+        // Function to display and hide the swipe indicators
+        function showIndicators() {
+            // Hide all indicators first
+            leftIndicator.classList.remove('show');
+            rightIndicator.classList.remove('show');
+
+            if (currentPageIndex > 0) {
+                leftIndicator.classList.add('show');
+            }
+            if (currentPageIndex < pages.length - 1) {
+                rightIndicator.classList.add('show');
             }
 
-            // Update button states
+            // Hide them after 3 seconds
+            setTimeout(() => {
+                leftIndicator.classList.remove('show');
+                rightIndicator.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initial call to show indicators on load
+        showIndicators();
+
+        function updateButtonStates() {
             prevButton.disabled = currentPageIndex === 0;
             nextButton.disabled = currentPageIndex === pages.length - 1;
         }
 
         function nextPage() {
             if (currentPageIndex < pages.length - 1) {
+                const oldPageIndex = currentPageIndex;
                 currentPageIndex++;
-                updatePageDisplay();
+                const oldPage = pages[oldPageIndex];
+                const newPage = pages[currentPageIndex];
+
+                // 1. Prepare the new page (start it rotated)
+                newPage.classList.add('active', 'next-page');
+
+                // 2. Animate the old page (the one flipping)
+                setTimeout(() => {
+                    oldPage.classList.add('flipping-right');
+                    // Ensure the old page is displayed during the flip
+                    oldPage.style.display = 'flex'; 
+                }, 10); // Small delay to ensure the active class is applied first
+
+                // 3. Clean up classes after the flip is complete
+                setTimeout(() => {
+                    // Hide the old page and remove flip classes
+                    oldPage.classList.remove('active', 'flipping-right');
+                    oldPage.style.display = 'none';
+
+                    // Make the new page fully active and remove prep class
+                    newPage.classList.remove('next-page');
+                    
+                    updateButtonStates();
+                }, flipDuration);
             }
         }
 
         function prevPage() {
             if (currentPageIndex > 0) {
+                const oldPageIndex = currentPageIndex;
                 currentPageIndex--;
-                updatePageDisplay();
+                const oldPage = pages[oldPageIndex];
+                const newPage = pages[currentPageIndex];
+
+                // 1. Prepare the new page (start it rotated)
+                newPage.classList.add('active', 'prev-page');
+
+                // 2. Animate the old page (the one flipping)
+                setTimeout(() => {
+                    oldPage.classList.add('flipping-left');
+                    // Ensure the old page is displayed during the flip
+                    oldPage.style.display = 'flex';
+                }, 10);
+
+                // 3. Clean up classes after the flip is complete
+                setTimeout(() => {
+                    // Hide the old page and remove flip classes
+                    oldPage.classList.remove('active', 'flipping-left');
+                    oldPage.style.display = 'none';
+
+                    // Make the new page fully active and remove prep class
+                    newPage.classList.remove('prev-page');
+                    
+                    updateButtonStates();
+                }, flipDuration);
             }
         }
 
         nextButton.addEventListener('click', nextPage);
         prevButton.addEventListener('click', prevPage);
 
+        // Re-display indicators on button clicks for better UX
+        nextButton.addEventListener('click', showIndicators);
+        prevButton.addEventListener('click', showIndicators);
+
         // Optional: Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 nextPage();
+                showIndicators();
             } else if (e.key === 'ArrowLeft') {
                 prevPage();
+                showIndicators();
             }
         });
 
-        // Initial setup
-        updatePageDisplay();
+        // Initial setup for the first page
+        updateButtonStates();
+        // Since the first page already has 'active', we don't need a full updatePageDisplay.
+        // We ensure all other pages are hidden:
+        pages.forEach((page, index) => {
+            if (index !== 0) {
+                page.style.display = 'none';
+            }
+        });
+
+        // Add a click listener to the center of the container to re-show indicators
+        document.querySelector('.comic-container').addEventListener('click', (e) => {
+            // Check if the click was not on a navigation button area
+            const containerRect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - containerRect.left;
+            const buttonWidth = containerRect.width * 0.25;
+
+            if (clickX >= buttonWidth && clickX <= (containerRect.width - buttonWidth)) {
+                showIndicators();
+            }
+        });
+
     </script>
 </body>
 </html>
