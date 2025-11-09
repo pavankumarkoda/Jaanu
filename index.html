@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doodle Comic Reader</title>
+    <title>Doodle Comic Reader (Color Match)</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* --- General Body & Container Styling (E-Reader Look) --- */
@@ -13,14 +13,13 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            /* Match the light background outside the mirror */
-            background-color: #f5f5f5; 
+            /* Match the light background outside the doodle's mirror */
+            background-color: #f0f0f0; 
             font-family: 'Roboto', sans-serif;
             perspective: 1800px;
             user-select: none;
         }
 
-        /* NEW: Styling to mimic the doodle's octagonal, brown frame */
         .comic-container {
             position: relative;
             width: 90%; 
@@ -28,19 +27,17 @@
             height: 90vh;
             max-height: 700px;
             
-            /* --- Mirror Frame Styling --- */
-            /* Using a solid color similar to the brown in the doodle */
-            background-color: #966f33; 
-            border-radius: 0; /* Removing default border radius */
+            /* Reverted to original rounded corners, but with a brown/wooden look */
+            border-radius: 12px; 
+            background-color: #966f33; /* Brown from the doodle frame */
             
-            /* Mimic the octagonal shape of the mirror with clip-path (approximate) */
-            clip-path: polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%);
+            /* Simple shadow, less intense than previous, no complex insets */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             
-            /* Shadow for depth like the frame */
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 0 10px rgba(150, 111, 51, 0.7) inset; 
             overflow: visible; 
             cursor: pointer; 
-            padding: 15px; /* Padding for the frame's thickness */
+            /* Added padding to create a visible 'frame' around the pages */
+            padding: 15px; 
             box-sizing: border-box;
         }
         
@@ -49,24 +46,23 @@
         /* -------------------------------------- */
         .comic-page {
             position: absolute;
+            /* Adjusted top/left and width/height to account for container padding */
             top: 15px;
             left: 15px;
-            /* Match the size of the inner content area defined by padding in the container */
             width: calc(100% - 30px); 
             height: calc(100% - 30px);
             display: none; 
             box-sizing: border-box;
-            /* Lighter background for the page itself (like sketch paper) */
-            background-color: #f7f3e8; 
-            border-radius: 0; /* Keep the page corners sharp */
+            /* Lighter, slightly creamy background for the page itself (like sketch paper) */
+            background-color: #fffdf7; 
+            border-radius: 8px; /* Slightly rounded page corners */
             
-            /* Default: Start rotation from the left center for neutral state */
             transform-origin: left center;
             transform: rotateY(0deg); 
             transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
             backface-visibility: hidden;
             z-index: 1; 
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
         }
 
         .comic-page.active {
@@ -75,7 +71,7 @@
             z-index: 2; 
         }
 
-        /* Page Flip Styles (no change needed here, as the logic is already bottom-corner anchored) */
+        /* Page Flip Styles (no change needed here) */
         .comic-page.flipping-right {
             transform-origin: left bottom;
             transform: rotateY(-180deg);
@@ -106,26 +102,26 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             text-align: center;
-            /* Use a paper-like color inside */
+            /* Inner content area: a slightly rougher paper feel */
             background-color: #fffaf0; 
-            /* Inner border line to simulate the drawing border */
-            border: 2px solid #222; 
-            border-radius: 4px; 
+            /* Border resembling the inner line work of the doodle */
+            border: 1px solid #333; 
+            border-radius: 6px; 
             padding: 25px;
             box-sizing: border-box;
         }
         
         .page-content h3 { 
             margin-top: 0; 
-            color: #1a1a1a; /* Dark ink color */
+            color: #222; /* Darker ink color */
             font-family: 'Bangers', cursive; 
             font-size: 2.2em; 
-            /* Slight, subtle text shadow for a doodle effect */
-            text-shadow: 1px 1px 0 #f7f3e8, 2px 2px 0 rgba(0,0,0,0.1); 
+            /* Subtle text shadow for a drawn look */
+            text-shadow: 1px 1px 0 #f0e9d9; 
             margin-bottom: 20px; 
         }
         .page-content p { 
-            color: #333; /* Ink color */
+            color: #444; /* Slightly lighter ink for body text */
             font-family: 'Roboto', sans-serif; 
             font-size: 1.1em; 
             line-height: 1.4; 
@@ -134,7 +130,7 @@
         .icon-placeholder { 
             font-size: 4em; 
             margin: 25px 0; 
-            /* Used a slightly less harsh red for the doodle vibe */
+            /* Red from the doodle */
             color: #cc4444; 
         }
 
@@ -237,7 +233,7 @@
                 <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
                 <p class="icon-placeholder">💥</p>
                 <p>The tension is unbearable!</p>
-            </div>
+            </p>
         </div>
 
         <div class="comic-page" data-page="10">
@@ -402,3 +398,15 @@
     </script>
 </body>
 </html>
+```http://googleusercontent.com/image_generation_content/1
+
+
+
+Now, the comic reader UI should have:
+
+* **A brown, slightly rounded rectangular "frame"** around the pages, resembling the mirror's border color.
+* **Warm, off-white "paper" backgrounds** for the pages, similar to the doodle's canvas.
+* **Darker "ink" colors** for text and borders, matching the doodle's outlines.
+* **The red color** for the placeholder icons, consistent with the doodle's use of color.
+
+The overall shape and functionality remain sleek, like a modern e-reader, but with a color palette that evokes your doodle! Let me know if this is closer to what you envisioned!
