@@ -3,52 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simplified 10-Page Comic Reader</title>
+    <title>E-Reader Comic</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            /* Color Palette */
-            --color-primary: #d9534f; /* Classic Comic Red */
-            --color-secondary: #f0f8ff; /* Light Background */
-            --color-accent: #337ab7; /* Blue Accent */
-            --color-dark: #222; /* Dark Ink */
-            --color-panel-bg: #fff; 
-            --shadow-heavy: 10px 10px 20px rgba(0, 0, 0, 0.5);
-        }
-
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: var(--color-dark);
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-
-        .comic-wrapper {
-            max-width: 90%;
-            width: 1000px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            background-color: #f5f5dc; /* Beige/sepia background */
+            font-family: 'Bangers', cursive, sans-serif;
         }
 
         .comic-container {
             position: relative;
-            width: 100%;
-            padding-bottom: 150%; /* Aspect ratio (2:3 portrait) */
-            max-width: 400px;
-            max-height: 600px;
-            box-shadow: var(--shadow-heavy);
-            border: 10px solid var(--color-dark);
+            /* Standard portrait aspect ratio for e-readers, with a max-width */
+            width: 90%; 
+            max-width: 450px; 
+            height: 90vh; /* Use viewport height for a tall look */
+            max-height: 700px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid #ccc;
             background-color: white;
             overflow: hidden;
             border-radius: 5px;
-            margin: 0 50px;
         }
 
         .comic-page {
@@ -57,245 +36,147 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transition: opacity 0.4s ease-in-out; 
-            display: none;
-            padding: 10px;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            display: none; 
             box-sizing: border-box;
-            background-color: var(--color-secondary);
-        }
-
-        .comic-page.active {
-            display: block; /* Simpler display block */
-            z-index: 10;
-        }
-
-        /* Basic Comic Panel Styling (from first version) */
-        .panel {
-            border: 3px solid var(--color-dark);
-            margin-bottom: 10px;
-            padding: 5px;
-            text-align: center;
-            height: calc(50% - 10px); 
-            box-sizing: border-box;
-            background-color: var(--color-panel-bg);
-            overflow: hidden;
-        }
-        
-        .panel h3 {
-            font-family: 'Bangers', cursive;
-            margin-top: 0;
-            color: var(--color-primary);
-            text-shadow: 1px 1px 0px black;
-            font-size: 1.5em;
-        }
-        
-        /* Placeholder for images/art */
-        .art-placeholder {
-            height: 70%; 
-            background-color: var(--color-accent);
+            background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            font-size: 0.9em;
+            padding: 10px; /* Padding inside the page */
         }
 
-        /* Navigation Buttons (responsive styling retained) */
+        .comic-page.active {
+            display: flex; /* Active page visible */
+            z-index: 10;
+        }
+
+        /* Styling for the single portrait image/content per page */
+        .page-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: #fffaf0; /* Slightly off-white content background */
+            border: 1px dashed #999; /* Simple border for image/content area */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .page-content h3 {
+            margin-top: 0;
+            color: #4a4a4a;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .page-content p {
+            color: #333;
+            font-family: serif; /* More readable font for body text */
+            font-size: 1.1em;
+        }
+
+        /* Navigation Buttons - Opaque and Overlaid */
         .nav-button {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 15px 20px;
-            background-color: var(--color-primary);
+            top: 0; /* Align to the top of the container */
+            height: 100%; /* Full height to cover the side of the page */
+            width: 25%; /* Take up a quarter of the page width */
+            background-color: rgba(0, 0, 0, 0); /* Invisible background */
             color: white;
-            border: 3px solid var(--color-dark);
+            border: none;
             cursor: pointer;
             z-index: 20;
-            font-size: 1.2em;
-            font-weight: bold;
-            opacity: 0.9;
-            transition: all 0.2s ease-in-out;
-            text-transform: uppercase;
+            font-size: 0; /* Hide the text for a clean look */
+            transition: background-color 0.1s;
         }
 
         .nav-button:hover:not(:disabled) {
-            opacity: 1;
-            background-color: var(--color-accent);
-            transform: translateY(-50%) scale(1.05);
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle hover effect */
         }
-
+        
         .nav-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            opacity: 0.5;
+            cursor: default;
         }
 
-        #prev-button { left: 0; border-radius: 8px 0 0 8px; }
-        #next-button { right: 0; border-radius: 0 8px 8px 0; }
+        #prev-button {
+            left: 0;
+        }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .comic-wrapper { margin: 0; width: 100%; }
-            .comic-container { margin: 0 10px; width: 90vw; max-width: 450px; }
-            .nav-button { padding: 10px 15px; font-size: 1em; }
+        #next-button {
+            right: 0;
+        }
+        
+        /* Optional: Add visible icons/indicators if desired */
+        .nav-button::after {
+            content: attr(data-icon);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            color: #4a4a4a; /* Darker color for sepia mode look */
+            opacity: 0.3; /* Subtle indicator */
+            pointer-events: none; /* Important to allow click on button */
+            font-family: sans-serif;
+        }
+        
+        #prev-button::after {
+            left: 5px;
+        }
+        
+        #next-button::after {
+            right: 5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="comic-wrapper">
-        <button id="prev-button" class="nav-button" disabled>&#9664; Prev</button>
-        
-        <div class="comic-container">
-            
-            <div class="comic-page active" data-page="1">
-                <div class="panel">
-                    <h3>PAGE 1 - START!</h3>
-                    <div class="art-placeholder">KAPOW! Our hero leaps!</div>
-                    <p>The adventure begins on the skyscraper edge.</p>
-                </div>
-                <div class="panel">
-                    <h3>THE CALL TO ACTION</h3>
-                    <div class="art-placeholder">A mysterious shadow looms...</div>
-                    <p>The signal is weak, but the threat is clear.</p>
-                </div>
+    <div class="comic-container">
+        <div class="comic-page active" data-page="1">
+            <div class="page-content">
+                <h3>PAGE 1</h3>
+                <p>Welcome to the E-Comic Reader. Tap the right side to advance!</p>
+                <p style="font-size: 3em;">🖼️</p>
+                <p>This is where your single portrait image would be.</p>
             </div>
-
-            <div class="comic-page" data-page="2">
-                <div class="panel">
-                    <h3>PAGE 2 - ZAP!</h3>
-                    <div class="art-placeholder">A sudden energy blast!</div>
-                    <p>The villain strikes from the air!</p>
-                </div>
-                <div class="panel">
-                    <h3>DODGE LEFT!</h3>
-                    <div class="art-placeholder">Hero rolls away quickly.</div>
-                    <p>Close call! That beam nearly clipped him.</p>
-                </div>
-            </div>
-            
-            <div class="comic-page" data-page="3">
-                <div class="panel">
-                    <h3>PAGE 3 - COUNTER ATTACK</h3>
-                    <div class="art-placeholder">Hero throws a grappling hook.</div>
-                    <p>He's trying to close the distance.</p>
-                </div>
-                <div class="panel">
-                    <h3>MISSED!</h3>
-                    <div class="art-placeholder">The hook glances off a building.</div>
-                    <p>The wind resistance is too strong up here.</p>
-                </div>
-            </div>
-
-            <div class="comic-page" data-page="4">
-                <div class="panel">
-                    <h3>PAGE 4 - REGROUP</h3>
-                    <div class="art-placeholder">Landing safely on a ledge.</div>
-                    <p>Time to think. Brute force isn't working.</p>
-                </div>
-                <div class="panel">
-                    <h3>VILLAIN'S SMILE</h3>
-                    <div class="art-placeholder">The villain laughs maniacally.</div>
-                    <p>"You can't outsmart me, hero!"</p>
-                </div>
-            </div>
-
-            <div class="comic-page" data-page="5">
-                <div class="panel">
-                    <h3>PAGE 5 - THE PLAN</h3>
-                    <div class="art-placeholder">Close-up of the hero's determined face.</div>
-                    <p>He sees a structural weakness in the building.</p>
-                </div>
-                <div class="panel">
-                    <h3>LEVERAGE</h3>
-                    <div class="art-placeholder">A quick calculation.</div>
-                    <p>If he can lure the villain closer...</p>
-                </div>
-            </div>
-
-            <div class="comic-page" data-page="6">
-                <div class="panel">
-                    <h3>PAGE 6 - BOLD MOVE</h3>
-                    <div class="art-placeholder">Hero jumps *towards* the villain.</div>
-                    <p>A shocking move that confuses the enemy.</p>
-                </div>
-                <div class="panel">
-                    <h3>FOOLED YOU!</h3>
-                    <div class="art-placeholder">The villain prepares to fire again.</div>
-                    <p>"You idiot! You jumped right into my trap!"</p>
-                </div>
-            </div>
-
-            <div class="comic-page" data-page="7">
-                <div class="panel">
-                    <h3>PAGE 7 - BOOM!</h3>
-                    <div class="art-placeholder" style="background-color: var(--color-primary);">Explosion near the ledge!</div>
-                    <p>The villain's blast hits the weakened point!</p>
-                </div>
-                <div class="panel">
-                    <h3>COLLAPSE</h3>
-                    <div class="art-placeholder">Rubble and smoke fill the air.</div>
-                    <p>The confusion is perfect cover.</p>
-                </div>
-            </div>
-
-            <div class="comic-page" data-page="8">
-                <div class="panel">
-                    <h3>PAGE 8 - A PUNCH!</h3>
-                    <div class="art-placeholder">Hero lands a solid blow on the villain.</div>
-                    <p>The element of surprise worked!</p>
-                </div>
-                <div class="panel">
-                    <h3>DOWN HE GOES!</h3>
-                    <div class="art-placeholder">The villain tumbles.</div>
-                    <p>He drops the device! Now's the time!</p>
-                </div>
-            </div>
-
-            <div class="comic-page" data-page="9">
-                <div class="panel">
-                    <h3>PAGE 9 - DEVICE SECURED</h3>
-                    <div class="art-placeholder">Hero holds up the captured device.</div>
-                    <p>The city is safe once more!</p>
-                </div>
-                <div class="panel">
-                    <h3>THE ESCAPE</h3>
-                    <div class="art-placeholder">The villain uses a smoke bomb to vanish.</div>
-                    <p>"This isn't over, hero!"</p>
-                </div>
-            </div>
-
-            <div class="comic-page" data-page="10">
-                <div class="panel">
-                    <h3>PAGE 10 - PEACE RESTORED</h3>
-                    <div class="art-placeholder" style="background-color: var(--color-dark);">The hero stands tall.</div>
-                    <p>Another victory, but at what cost?</p>
-                </div>
-                <div class="panel" style="background-color: var(--color-primary);">
-                    <h3 style="color: white; text-shadow: 2px 2px 0px var(--color-dark);">TO BE CONTINUED...</h3>
-                    <p style="color: white;">Tune in for the next electrifying issue!</p>
-                    <div class="art-placeholder" style="height: 30%; background-color: white; color: var(--color-dark);">ISSUE #2 PREVIEW</div>
-                </div>
-            </div>
-
         </div>
 
-        <button id="next-button" class="nav-button">Next &#9654;</button>
+        <div class="comic-page" data-page="2">
+            <div class="page-content">
+                <h3>PAGE 2</h3>
+                <p>The story continues... Focus on one main image at a time for a better experience.</p>
+                <p style="font-size: 3em;">📖</p>
+                <p>The navigation buttons are now transparent and cover the left/right edges.</p>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="3">
+            <div class="page-content">
+                <h3>PAGE 3</h3>
+                <p>The End (for now)! Tap the left side to go back.</p>
+                <p style="font-size: 3em;">🔚</p>
+                <p>Enjoy your reading!</p>
+            </div>
+        </div>
+
+        <button id="prev-button" class="nav-button" disabled data-icon="&#9664;"></button>
+        <button id="next-button" class="nav-button" data-icon="&#9654;"></button>
     </div>
 
     <script>
         const pages = document.querySelectorAll('.comic-page');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
-        let currentPageIndex = 0; 
+        let currentPageIndex = 0;
 
         function updatePageDisplay() {
             pages.forEach((page, index) => {
-                // Toggles the active class for visibility
+                page.classList.remove('active');
                 if (index === currentPageIndex) {
                     page.classList.add('active');
-                } else {
-                    page.classList.remove('active');
                 }
             });
 
@@ -321,7 +202,7 @@
         nextButton.addEventListener('click', nextPage);
         prevButton.addEventListener('click', prevPage);
 
-        // Keyboard navigation
+        // Optional: Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 nextPage();
@@ -334,5 +215,4 @@
         updatePageDisplay();
     </script>
 </body>
-    </html>
-    
+</html>
