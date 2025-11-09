@@ -3,26 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comic Book Reader</title>
+    <title>Vibrant Responsive Comic Book Reader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            /* Color Palette */
+            --color-primary: #e63946; /* Bright Red */
+            --color-secondary: #f1faee; /* Light Background */
+            --color-accent: #457b9d; /* Blue Accent */
+            --color-dark: #1d3557; /* Dark Ink */
+            --color-panel-bg: #fff0f5; /* Panel Background (light pink) */
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-            font-family: 'Bangers', cursive, sans-serif; /* Use a comic-style font if loaded */
+            background-color: var(--color-dark);
+            font-family: 'Oswald', sans-serif;
+            color: var(--color-dark);
+            padding: 20px;
+        }
+
+        .comic-wrapper {
+            max-width: 90%;
+            width: 1000px; /* Max width for large screens */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
         .comic-container {
             position: relative;
-            width: 400px;
-            height: 600px;
-            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
-            border: 10px solid #222;
+            width: 100%;
+            padding-bottom: 150%; /* Aspect ratio (2:3 portrait) */
+            max-width: 400px;
+            max-height: 600px;
+            box-shadow: var(--shadow-heavy);
+            border: 10px solid var(--color-dark);
             background-color: white;
             overflow: hidden;
+            border-radius: 5px;
+            margin: 0 50px; /* Space for buttons */
         }
 
         .comic-page {
@@ -31,9 +59,224 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            display: none; /* All pages hidden by default */
+            transition: opacity 0.4s ease-in-out; /* Smooth transition */
+            display: none;
+            padding: 15px;
+            box-sizing: border-box;
+            background-color: var(--color-secondary);
+        }
+
+        .comic-page.active {
+            display: grid; /* Use grid for panel layout */
+            grid-template-rows: 1fr 1fr; /* Two rows for two panels */
+            gap: 15px;
+            z-index: 10;
+        }
+
+        /* Comic Panel Styling */
+        .panel {
+            border: 4px solid var(--color-dark);
             padding: 10px;
+            text-align: center;
+            box-sizing: border-box;
+            background-color: var(--color-panel-bg);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .panel h3 {
+            font-family: 'Bangers', cursive;
+            margin: 5px 0 10px 0;
+            font-size: 1.8em;
+            color: var(--color-primary);
+            text-shadow: 2px 2px 0px var(--color-dark);
+            line-height: 1;
+        }
+
+        .dialogue {
+            font-family: sans-serif;
+            font-size: 0.9em;
+            color: var(--color-dark);
+        }
+
+        /* Placeholder for images/art */
+        .art-placeholder {
+            height: calc(100% - 40px);
+            background-color: var(--color-accent);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5em;
+        }
+
+        /* Navigation Buttons */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 15px 20px;
+            background-color: var(--color-primary);
+            color: white;
+            border: 3px solid var(--color-dark);
+            cursor: pointer;
+            z-index: 20;
+            font-size: 1.2em;
+            font-weight: bold;
+            opacity: 0.9;
+            transition: all 0.2s ease-in-out;
+            box-shadow: var(--shadow-light);
+            text-transform: uppercase;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            opacity: 1;
+            background-color: var(--color-accent);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .nav-button:disabled {
+            background-color: #ccc;
+            border-color: #999;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        #prev-button {
+            left: 0;
+            border-radius: 8px 0 0 8px;
+        }
+
+        #next-button {
+            right: 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .comic-wrapper {
+                margin: 0;
+                width: 100%;
+            }
+            .comic-container {
+                margin: 0 10px;
+                width: 90vw; /* Take up more width on smaller screens */
+                max-width: 450px;
+            }
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+            #prev-button { left: 0; }
+            #next-button { right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="comic-wrapper">
+        <button id="prev-button" class="nav-button" disabled>&#9664; Prev</button>
+        
+        <div class="comic-container">
+            <div class="comic-page active" data-page="1">
+                <div class="panel">
+                    <h3>THE ADVENTURE BEGINS!</h3>
+                    <div class="art-placeholder">KAPOW! The Origin Story!</div>
+                    <p class="dialogue">"I must stop him before it's too late!"</p>
+                </div>
+                <div class="panel">
+                    <h3>THE SHADOW LOOMS</h3>
+                    <div class="art-placeholder">City Skyline</div>
+                    <p class="dialogue">A mysterious figure watched from above...</p>
+                </div>
+            </div>
+
+            <div class="comic-page" data-page="2">
+                <div class="panel">
+                    <h3>CLASH OF FATES</h3>
+                    <div class="art-placeholder">ZAP! Hero vs. Villain!</div>
+                    <p class="dialogue">"Your time is over, villain!"</p>
+                </div>
+                <div class="panel">
+                    <h3>A DANGEROUS ESCAPE</h3>
+                    <div class="art-placeholder">Explosion Scene</div>
+                    <p class="dialogue">The explosion sent shockwaves through the city!</p>
+                </div>
+            </div>
+            
+            <div class="comic-page" data-page="3">
+                <div class="panel">
+                    <h3>VICTORY OR DEFEAT?</h3>
+                    <div class="art-placeholder">BAM! Cliffhanger Moment!</div>
+                    <p class="dialogue">"Wait... what's that noise?"</p>
+                </div>
+                <div class="panel">
+                    <h3>TO BE CONTINUED...</h3>
+                    <div class="art-placeholder" style="background-color: var(--color-dark);">
+                        <span style="color: white;">NEXT ISSUE!</span>
+                    </div>
+                    <p class="dialogue">Read the next issue next week!</p>
+                </div>
+            </div>
+        </div>
+
+        <button id="next-button" class="nav-button">Next &#9654;</button>
+    </div>
+
+    <script>
+        const pages = document.querySelectorAll('.comic-page');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        let currentPageIndex = 0;
+
+        function updatePageDisplay() {
+            pages.forEach((page, index) => {
+                // Simple fade transition by toggling the active class
+                if (index === currentPageIndex) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+
+            // Update button states
+            prevButton.disabled = currentPageIndex === 0;
+            nextButton.disabled = currentPageIndex === pages.length - 1;
+        }
+
+        function nextPage() {
+            if (currentPageIndex < pages.length - 1) {
+                currentPageIndex++;
+                updatePageDisplay();
+            }
+        }
+
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                currentPageIndex--;
+                updatePageDisplay();
+            }
+        }
+
+        nextButton.addEventListener('click', nextPage);
+        prevButton.addEventListener('click', prevPage);
+
+        // Optional: Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
+
+        // Initial setup
+        updatePageDisplay();
+    </script>
+</body>
+</html>
             box-sizing: border-box;
             background-color: white;
         }
