@@ -6,147 +6,127 @@
     <title>E-Reader Comic: Book Swipe & Flip</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f5f5dc; /* Beige/sepia background */
-            font-family: 'Bangers', cursive, sans-serif;
-            perspective: 1500px; /* Enable perspective for 3D flip effect */
-            user-select: none; /* Prevent text selection during swiping */
-        }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f5f5dc; /* Beige/sepia background */
+        font-family: 'Bangers', cursive, sans-serif;
+        perspective: 1500px; /* Stronger perspective for a deeper 3D curve */
+        user-select: none;
+    }
 
-        .comic-container {
-            position: relative;
-            width: 90%; 
-            max-width: 450px; 
-            height: 90vh;
-            max-height: 700px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            border: 1px solid #999;
-            background-color: white;
-            overflow: visible; 
-            border-radius: 5px;
-            cursor: pointer; /* Suggests interactivity */
-        }
+    .comic-container {
+        position: relative;
+        width: 90%; 
+        max-width: 450px; 
+        height: 90vh;
+        max-height: 700px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        border: 1px solid #999;
+        background-color: white;
+        overflow: visible; 
+        border-radius: 5px;
+        cursor: pointer; 
+    }
 
-        /* -------------------------------------- */
-        /* Page-Flip CSS (Simplified for better flow) */
-        /* -------------------------------------- */
-        .comic-page {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none; 
-            box-sizing: border-box;
-            background-color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            
-            /* Initial state for 3D flip */
-            transform-origin: left center;
-            transform: rotateY(0deg); 
-            transition: transform 0.6s ease-in-out; /* Slightly faster transition */
-            backface-visibility: hidden;
-        }
-
-        .comic-page.active {
-            display: flex;
-            z-index: 10;
-            transform: rotateY(0deg); 
-        }
-
-        /* When turning to the NEXT page (flipping right) */
-        .comic-page.flipping-right {
-            transform: rotateY(-180deg);
-            z-index: 20; 
-        }
+    /* -------------------------------------- */
+    /* Core Page-Flip CSS */
+    /* -------------------------------------- */
+    .comic-page {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none; 
+        box-sizing: border-box;
+        background-color: white;
+        padding: 10px;
         
-        /* The new page (coming from the right) */
-        .comic-page.next-page {
-            transform-origin: left center;
-            transform: rotateY(180deg); 
-            transition: none; /* No transition until it's about to be displayed */
-        }
-        
-        /* When turning to the PREV page (flipping left) */
-        .comic-page.flipping-left {
-            transform-origin: right center;
-            transform: rotateY(180deg);
-            z-index: 20;
-        }
-        
-        /* The new page (coming from the left) */
-        .comic-page.prev-page {
-            transform-origin: right center;
-            transform: rotateY(-180deg); 
-            transition: none; /* No transition until it's about to be displayed */
-        }
+        /* Set up 3D space */
+        transform-origin: left center;
+        transform: rotateY(0deg); 
+        /* Use a custom cubic-bezier for a more natural, accelerating/decelerating flip */
+        transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
+        backface-visibility: hidden;
+    }
 
-        /* -------------------------------------- */
-        /* General Content Styling */
-        /* -------------------------------------- */
-        .page-content {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background-color: #fffaf0; 
-            border: 1px dashed #999; 
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        
-        .page-content h3 {
-            margin-top: 0;
-            color: #4a4a4a;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
+    .comic-page.active {
+        display: flex;
+        z-index: 10;
+        transform: rotateY(0deg); 
+    }
+    
+    .page-content {
+        /* Content styling remains the same */
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #fffaf0; 
+        border: 1px dashed #999; 
+        padding: 20px;
+        box-sizing: border-box;
+    }
 
-        .page-content p {
-            color: #333;
-            font-family: serif; 
-            font-size: 1.1em;
-            margin: 5px 0;
-        }
-        
-        .icon-placeholder {
-            font-size: 3em;
-            margin: 20px 0;
-        }
-        
-        /* -------------------------------------- */
-        /* Swipe/Tap Indicator CSS */
-        /* -------------------------------------- */
-        .swipe-indicator {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3em;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            z-index: 30; 
-            pointer-events: none;
-        }
 
-        .swipe-indicator.show {
-            opacity: 0.8;
-            transition: opacity 0.3s ease-in-out;
-        }
+    /* Next Page Flip (Turning page right to reveal new page) */
+    .comic-page.flipping-right {
+        /* The page that is currently visible flips away */
+        transform: rotateY(-180deg);
+        z-index: 20; 
+    }
+    
+    .comic-page.active.next-page {
+        /* The new page starts rotated, ready to receive the flip animation */
+        transform-origin: left center;
+        transform: rotateY(180deg); 
+        /* Ensure it gets the same transition timing */
+        transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
+    }
 
-        #left-indicator { left: -40px; }
-        #right-indicator { right: -40px; }
-    </style>
+
+    /* Previous Page Flip (Turning page left to reveal old page) */
+    .comic-page.flipping-left {
+        /* The page that is currently visible flips away */
+        transform-origin: right center;
+        transform: rotateY(180deg);
+        z-index: 20;
+    }
+    
+    .comic-page.active.prev-page {
+        /* The new page starts rotated, ready to receive the flip animation */
+        transform-origin: right center;
+        transform: rotateY(-180deg); 
+        /* Ensure it gets the same transition timing */
+        transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
+    }
+
+    /* Fix for Z-index: Make sure the flipping page is always above the page it is revealing/covering */
+    .comic-page.active {
+        z-index: 1; /* Default layer */
+    }
+    .comic-page.flipping-right, .comic-page.flipping-left {
+        z-index: 10; /* Flipping layer */
+    }
+
+    /* -------------------------------------- */
+    /* Indicator/Placeholder Styling (Kept for completeness) */
+    /* -------------------------------------- */
+    .page-content h3 { margin-top: 0; color: #4a4a4a; font-size: 1.5em; margin-bottom: 15px; }
+    .page-content p { color: #333; font-family: serif; font-size: 1.1em; margin: 5px 0; }
+    .icon-placeholder { font-size: 3em; margin: 20px 0; }
+    .swipe-indicator { position: absolute; top: 50%; transform: translateY(-50%); font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out; z-index: 30; pointer-events: none; }
+    .swipe-indicator.show { opacity: 0.8; transition: opacity 0.3s ease-in-out; }
+    #left-indicator { left: -40px; }
+    #right-indicator { right: -40px; }
+</style>
 </head>
 <body>
 
