@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibrant Responsive Comic Book Reader</title>
+    <title>10-Page Vibrant Comic Book Reader</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@700&display=swap" rel="stylesheet">
     
     <style>
@@ -59,7 +59,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transition: opacity 0.4s ease-in-out; /* Smooth transition */
+            transition: opacity 0.4s ease-in-out; 
             display: none;
             padding: 15px;
             box-sizing: border-box;
@@ -67,8 +67,8 @@
         }
 
         .comic-page.active {
-            display: grid; /* Use grid for panel layout */
-            grid-template-rows: 1fr 1fr; /* Two rows for two panels */
+            display: grid; 
+            grid-template-rows: 1fr 1fr; 
             gap: 15px;
             z-index: 10;
         }
@@ -110,6 +110,7 @@
             color: white;
             font-family: 'Bangers', cursive;
             font-size: 1.5em;
+            text-shadow: 1px 1px 0px black;
         }
 
         /* Navigation Buttons */
@@ -162,7 +163,7 @@
             }
             .comic-container {
                 margin: 0 10px;
-                width: 90vw; /* Take up more width on smaller screens */
+                width: 90vw; 
                 max-width: 450px;
             }
             .nav-button {
@@ -180,46 +181,132 @@
         <button id="prev-button" class="nav-button" disabled>&#9664; Prev</button>
         
         <div class="comic-container">
+            
             <div class="comic-page active" data-page="1">
-                <div class="panel">
-                    <h3>THE ADVENTURE BEGINS!</h3>
-                    <div class="art-placeholder">KAPOW! The Origin Story!</div>
-                    <p class="dialogue">"I must stop him before it's too late!"</p>
-                </div>
-                <div class="panel">
-                    <h3>THE SHADOW LOOMS</h3>
-                    <div class="art-placeholder">City Skyline</div>
-                    <p class="dialogue">A mysterious figure watched from above...</p>
+                <div class="panel" style="grid-row: 1 / span 2; background-color: var(--color-primary);">
+                    <h3 style="font-size: 3em; color: white; text-shadow: 4px 4px 0px var(--color-dark);">CRYPTO-CRISIS!</h3>
+                    <div class="art-placeholder" style="height: 50%; background-color: white; color: var(--color-dark);">ISSUE #1: The Byte Bandit</div>
+                    <p class="dialogue" style="color: white; font-size: 1.2em;">The city's blockchain is frozen! Only she can save it!</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="2">
                 <div class="panel">
-                    <h3>CLASH OF FATES</h3>
-                    <div class="art-placeholder">ZAP! Hero vs. Villain!</div>
-                    <p class="dialogue">"Your time is over, villain!"</p>
+                    <h3>ZERO HOUR</h3>
+                    <div class="art-placeholder">The City Sleeps...</div>
+                    <p class="dialogue">"A quiet night... too quiet," thought Agent Cipher.</p>
                 </div>
                 <div class="panel">
-                    <h3>A DANGEROUS ESCAPE</h3>
-                    <div class="art-placeholder">Explosion Scene</div>
-                    <p class="dialogue">The explosion sent shockwaves through the city!</p>
+                    <h3>THE ALARM!</h3>
+                    <div class="art-placeholder" style="background-color: #ffcc00;">*BEEP-BEEP-BEEP!*</div>
+                    <p class="dialogue">Her wrist communicator screamed: Code Red!</p>
                 </div>
             </div>
             
             <div class="comic-page" data-page="3">
                 <div class="panel">
-                    <h3>VICTORY OR DEFEAT?</h3>
-                    <div class="art-placeholder">BAM! Cliffhanger Moment!</div>
-                    <p class="dialogue">"Wait... what's that noise?"</p>
+                    <h3>THE FREEZE</h3>
+                    <div class="art-placeholder">Frozen Digital Screen</div>
+                    <p class="dialogue">"All transactions halted! The Ledger is locked solid!"</p>
                 </div>
                 <div class="panel">
-                    <h3>TO BE CONTINUED...</h3>
-                    <div class="art-placeholder" style="background-color: var(--color-dark);">
-                        <span style="color: white;">NEXT ISSUE!</span>
-                    </div>
-                    <p class="dialogue">Read the next issue next week!</p>
+                    <h3>THE CULPRIT</h3>
+                    <div class="art-placeholder">Shadowy Figure on Rooftop</div>
+                    <p class="dialogue">"He left a digital signature... The Byte Bandit!"</p>
                 </div>
             </div>
+
+            <div class="comic-page" data-page="4">
+                <div class="panel">
+                    <h3>KAPOW!</h3>
+                    <div class="art-placeholder" style="background-color: var(--color-primary);">Agent Cipher Leaps!</div>
+                    <p class="dialogue">"No time to waste! I'm taking the shortcut!"</p>
+                </div>
+                <div class="panel">
+                    <h3>THE CHASE BEGINS</h3>
+                    <div class="art-placeholder">Across the Neon Skyscrapers</div>
+                    <p class="dialogue">The pursuit was on, a blur of red and blue.</p>
+                </div>
+            </div>
+
+            <div class="comic-page" data-page="5">
+                <div class="panel">
+                    <h3>BYTE BANDIT REVEALED</h3>
+                    <div class="art-placeholder">A Masked Face</div>
+                    <p class="dialogue">"You're too late, Agent! The data is mine!"</p>
+                </div>
+                <div class="panel">
+                    <h3>WHAM!</h3>
+                    <div class="art-placeholder" style="background-color: #00bfff;">A Data Beam Attack!</div>
+                    <p class="dialogue">The Bandit fired a concentrated blast of encrypted code!</p>
+                </div>
+            </div>
+
+            <div class="comic-page" data-page="6">
+                <div class="panel">
+                    <h3>DODGE!</h3>
+                    <div class="art-placeholder">Cipher Rolls to Safety</div>
+                    <p class="dialogue">"He's faster than I thought! I need a counter-move."</p>
+                </div>
+                <div class="panel">
+                    <h3>THE GADGET</h3>
+                    <div class="art-placeholder">A Small Electronic Device</div>
+                    <p class="dialogue">She activated her Chrono-Decoder, ready to hack back.</p>
+                </div>
+            </div>
+
+            <div class="comic-page" data-page="7">
+                <div class="panel">
+                    <h3>ZAP!</h3>
+                    <div class="art-placeholder" style="background-color: #98fb98;">Cipher's Counter-Hack</div>
+                    <p class="dialogue">A green shield of firewalls enveloped the Bandit!</p>
+                </div>
+                <div class="panel">
+                    <h3>MALFUNCTION</h3>
+                    <div class="art-placeholder">Bandit's Equipment Sparks</div>
+                    <p class="dialogue">"No! My encryption! It's overloading!"</p>
+                </div>
+            </div>
+
+            <div class="comic-page" data-page="8">
+                <div class="panel">
+                    <h3>A FALL</h3>
+                    <div class="art-placeholder">Bandit Stumbles</div>
+                    <p class="dialogue">The distraction bought Cipher precious seconds.</p>
+                </div>
+                <div class="panel">
+                    <h3>THE RECOVERY</h3>
+                    <div class="art-placeholder">Cipher Secures the Data Drive</div>
+                    <p class="dialogue">The stolen data was safe. Mission accomplished...?</p>
+                </div>
+            </div>
+
+            <div class="comic-page" data-page="9">
+                <div class="panel">
+                    <h3>ESCAPE</h3>
+                    <div class="art-placeholder">Bandit Vanishes into Smoke</div>
+                    <p class="dialogue">"He got away! But why did he leave this behind?"</p>
+                </div>
+                <div class="panel">
+                    <h3>THE CLUE</h3>
+                    <div class="art-placeholder" style="background-color: #ffa07a;">A Strange Symbol</div>
+                    <p class="dialogue">A small, embossed symbol on the wall. It wasn't his style.</p>
+                </div>
+            </div>
+
+            <div class="comic-page" data-page="10">
+                <div class="panel">
+                    <h3>A NEW THREAT</h3>
+                    <div class="art-placeholder" style="background-color: var(--color-dark); color: var(--color-primary);">WHO IS BEHIND THIS?</div>
+                    <p class="dialogue" style="font-size: 1.1em;">"The Byte Bandit was just a pawn..."</p>
+                </div>
+                <div class="panel" style="background-color: var(--color-accent);">
+                    <h3 style="color: white; text-shadow: 2px 2px 0px var(--color-dark);">THE END?</h3>
+                    <p class="dialogue" style="color: white; font-size: 1.2em;">Find out what happens next in **CRYPTO-CRISIS #2!**</p>
+                    <div class="art-placeholder" style="height: 30%; background-color: var(--color-dark); font-size: 1em;">TO BE CONTINUED...</div>
+                </div>
+            </div>
+
         </div>
 
         <button id="next-button" class="nav-button">Next &#9654;</button>
@@ -229,11 +316,11 @@
         const pages = document.querySelectorAll('.comic-page');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
-        let currentPageIndex = 0;
+        let currentPageIndex = 0; // Starts at Page 1 (index 0)
 
         function updatePageDisplay() {
             pages.forEach((page, index) => {
-                // Simple fade transition by toggling the active class
+                // Toggles the active class for visibility
                 if (index === currentPageIndex) {
                     page.classList.add('active');
                 } else {
@@ -248,161 +335,6 @@
 
         function nextPage() {
             if (currentPageIndex < pages.length - 1) {
-                currentPageIndex++;
-                updatePageDisplay();
-            }
-        }
-
-        function prevPage() {
-            if (currentPageIndex > 0) {
-                currentPageIndex--;
-                updatePageDisplay();
-            }
-        }
-
-        nextButton.addEventListener('click', nextPage);
-        prevButton.addEventListener('click', prevPage);
-
-        // Optional: Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                nextPage();
-            } else if (e.key === 'ArrowLeft') {
-                prevPage();
-            }
-        });
-
-        // Initial setup
-        updatePageDisplay();
-    </script>
-</body>
-</html>
-            box-sizing: border-box;
-            background-color: white;
-        }
-
-        .comic-page.active {
-            display: block; /* Active page visible */
-            z-index: 10;
-        }
-
-        /* Basic Comic Panel Styling */
-        .panel {
-            border: 3px solid black;
-            margin-bottom: 10px;
-            padding: 5px;
-            text-align: center;
-            height: calc(50% - 15px); /* Two panels per page */
-            box-sizing: border-box;
-            background-color: #ffe4e1; /* Light background for contrast */
-        }
-        
-        .panel h3 {
-            margin-top: 0;
-            color: #d9534f;
-            text-shadow: 1px 1px 0px black;
-        }
-
-        /* Navigation Buttons */
-        .nav-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 10px 15px;
-            background-color: #222;
-            color: white;
-            border: none;
-            cursor: pointer;
-            z-index: 20;
-            font-size: 1.5em;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .nav-button:hover {
-            opacity: 1;
-        }
-
-        #prev-button {
-            left: -60px;
-            border-radius: 5px 0 0 5px;
-        }
-
-        #next-button {
-            right: -60px;
-            border-radius: 0 5px 5px 0;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="comic-container">
-        <div class="comic-page active" data-page="1">
-            <div class="panel">
-                <h3>PAGE 1 - START!</h3>
-                <p>KAPOW! Our hero begins their journey!</p>
-                
-            </div>
-            <div class="panel">
-                <h3>The Setup</h3>
-                <p>A mysterious shadow looms...</p>
-                [attachment_0](attachment)
-            </div>
-        </div>
-
-        <div class="comic-page" data-page="2">
-            <div class="panel">
-                <h3>PAGE 2 - CLASH!</h3>
-                <p>ZAP! The battle is on! Who will win?</p>
-                
-            </div>
-            <div class="panel">
-                <h3>Tension Builds</h3>
-                <p>The stakes are incredibly high now.</p>
-                
-            </div>
-        </div>
-        
-        <div class="comic-page" data-page="3">
-            <div class="panel">
-                <h3>PAGE 3 - END!</h3>
-                <p>BAM! A cliffhanger! To be continued...</p>
-                
-            </div>
-            <div class="panel">
-                <h3>Fin</h3>
-                <p>Read the next issue!</p>
-                [Small logo]
-            </div>
-        </div>
-
-        <button id="prev-button" class="nav-button" disabled>&#9664; Prev</button>
-        <button id="next-button" class="nav-button">Next &#9654;</button>
-    </div>
-
-    <script>
-        const pages = document.querySelectorAll('.comic-page');
-        const prevButton = document.getElementById('prev-button');
-        const nextButton = document.getElementById('next-button');
-        let currentPageIndex = 0;
-
-        function updatePageDisplay() {
-            pages.forEach((page, index) => {
-                page.classList.remove('active');
-                if (index === currentPageIndex) {
-                    page.classList.add('active');
-                }
-            });
-
-            // Update button states
-            prevButton.disabled = currentPageIndex === 0;
-            nextButton.disabled = currentPageIndex === pages.length - 1;
-        }
-
-        function nextPage() {
-            if (currentPageIndex < pages.length - 1) {
-                // Optional: Add a simple page turn animation before switching
-                // For a true flip effect, you'd use CSS transforms here
                 currentPageIndex++;
                 updatePageDisplay();
             }
