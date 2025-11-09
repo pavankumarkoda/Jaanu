@@ -49,7 +49,6 @@
             height: calc(100% - 30px);
             display: none; 
             box-sizing: border-box;
-            /* Changed from color to transparent/low opacity to show image */
             background-color: transparent; 
             border-radius: 8px; 
             
@@ -118,31 +117,42 @@
             z-index: 10; /* Ensures text is always on top */
         }
         
-        /* Text and Icon Styling (unchanged colors) */
+        /* --- MODIFIED: Transparent Font with White Border --- */
         .page-content h3 { 
             margin-top: 0; 
-            color: #222; 
+            color: transparent; /* Make text transparent */
+            -webkit-text-stroke: 1px white; /* Add white border for webkit browsers */
+            text-stroke: 1px white; /* Add white border for other browsers */
             font-family: 'Bangers', cursive; 
             font-size: 2.2em; 
-            text-shadow: 1px 1px 0 #f0e9d9; 
+            text-shadow: none; /* Remove existing text shadow */
             margin-bottom: 20px; 
         }
+        
         .page-content p { 
-            color: #444; 
+            color: transparent; /* Make text transparent */
+            -webkit-text-stroke: 0.5px white; /* Add a thinner white border */
+            text-stroke: 0.5px white;
             font-family: 'Roboto', sans-serif; 
             font-size: 1.1em; 
             line-height: 1.4; 
             margin: 8px 0; 
-            /* Add a background to improve readability over busy images */
-            background-color: rgba(255, 255, 255, 0.8); 
+            /* Ensure the text box background is transparent so the image shows */
+            background-color: transparent; 
             padding: 2px 5px;
             border-radius: 3px;
         }
+
         .icon-placeholder { 
             font-size: 4em; 
             margin: 25px 0; 
             color: #cc4444; 
+            /* Restore original color for the emoji/icon */
+            -webkit-text-stroke: 0; 
+            text-stroke: 0;
+            background-color: transparent !important; /* Ensure icons aren't affected by 'p' background override */
         }
+        /* ----------------------------------------------------- */
 
         /* Indicator Styling (unchanged) */
         .swipe-indicator {
@@ -166,7 +176,7 @@
         <span id="right-indicator" class="swipe-indicator">👉</span>
 
         <div class="comic-page active" data-page="1">
-            <div class="page-content-background" style="background-image: url('unnamed.jpg');"></div>
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=1');"></div>
             <div class="page-content">
                 <h3>PAGE 1: THE BEGINNING</h3>
                 
