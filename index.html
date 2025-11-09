@@ -27,7 +27,6 @@
             max-height: 700px;
             
             border-radius: 12px; 
-            /* Brown from the doodle frame */
             background-color: #966f33; 
             
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -39,7 +38,7 @@
         }
         
         /* -------------------------------------- */
-        /* Core Page-Flip CSS */
+        /* Core Page-Flip CSS (Unchanged) */
         /* -------------------------------------- */
         .comic-page {
             position: absolute;
@@ -66,78 +65,74 @@
             z-index: 2; 
         }
 
-        /* Page Flip Styles (unchanged) */
         .comic-page.flipping-right { transform-origin: left bottom; transform: rotateY(-180deg); z-index: 10; }
         .comic-page.active.next-page { transform-origin: left bottom; transform: rotateY(180deg); }
         .comic-page.flipping-left { transform-origin: right bottom; transform: rotateY(180deg); z-index: 10; }
         .comic-page.active.prev-page { transform-origin: right bottom; transform: rotateY(-180deg); }
 
         /* -------------------------------------- */
-        /* Background Image & Content Styling */
+        /* Background Image & Content Styling (MODIFIED) */
         /* -------------------------------------- */
         
-        /* NEW: Styling for the Image Background Layer */
         .page-content-background {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             border-radius: 6px; 
-            
-            /* Crucial styles for automatic adjustment: */
             background-position: center center;
             background-repeat: no-repeat;
-            /* Ensures the image covers the entire area without distortion */
             background-size: cover; 
-            
-            /* Apply the paper-like color as an overlay/tint if needed */
             background-color: #fffaf0; 
-            
-            /* Optional: Add a slight opacity to the image so text reads better */
             opacity: 0.8; 
             z-index: 5; 
         }
 
         .page-content {
-            position: relative; /* Essential for placing content above the image */
+            position: relative;
             width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            text-align: center;
+            display: flex; 
+            flex-direction: column;
+            /* Pushes top elements to top, bottom elements to bottom */
+            justify-content: space-between; 
             
-            /* Transparent background for the main content box so the image shows through */
-            background-color: transparent; 
+            /* Add significant padding for 10% corner spacing */
+            padding: 10% 25px; 
+            box-sizing: border-box;
             
-            /* Border for the frame effect */
             border: 1px solid #333; 
             border-radius: 6px; 
-            padding: 25px;
-            box-sizing: border-box;
-            z-index: 10; /* Ensures text is always on top */
+            background-color: transparent; 
+            z-index: 10; 
         }
         
-        /* --- MODIFIED: Transparent Font with White Border --- */
+        /* NEW: Container to group and center text blocks horizontally */
+        .page-text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%; 
+        }
+        
+        /* --- Transparent Font with White Border (MODIFIED MARGINS) --- */
         .page-content h3 { 
             margin-top: 0; 
-            color: transparent; /* Make text transparent */
-            -webkit-text-stroke: 1px white; /* Add white border for webkit browsers */
-            text-stroke: 1px white; /* Add white border for other browsers */
+            margin-bottom: 0; /* Remove default margin */
+            color: transparent; 
+            -webkit-text-stroke: 1px white; 
+            text-stroke: 1px white; 
             font-family: 'Bangers', cursive; 
             font-size: 2.2em; 
-            text-shadow: none; /* Remove existing text shadow */
-            margin-bottom: 20px; 
+            text-shadow: none; 
         }
         
         .page-content p { 
-            color: transparent; /* Make text transparent */
-            -webkit-text-stroke: 0.5px white; /* Add a thinner white border */
+            color: transparent; 
+            -webkit-text-stroke: 0.5px white; 
             text-stroke: 0.5px white;
             font-family: 'Roboto', sans-serif; 
             font-size: 1.1em; 
             line-height: 1.4; 
-            margin: 8px 0; 
-            /* Ensure the text box background is transparent so the image shows */
+            margin: 5px 0; /* Adjusted margin */
             background-color: transparent; 
             padding: 2px 5px;
             border-radius: 3px;
@@ -145,14 +140,12 @@
 
         .icon-placeholder { 
             font-size: 4em; 
-            margin: 25px 0; 
+            margin: 15px 0; /* Reduced vertical margin */
             color: #cc4444; 
-            /* Restore original color for the emoji/icon */
             -webkit-text-stroke: 0; 
             text-stroke: 0;
-            background-color: transparent !important; /* Ensure icons aren't affected by 'p' background override */
+            background-color: transparent !important; 
         }
-        /* ----------------------------------------------------- */
 
         /* Indicator Styling (unchanged) */
         .swipe-indicator {
@@ -178,100 +171,150 @@
         <div class="comic-page active" data-page="1">
             <div class="page-content-background" style="background-image: url('unnamed.jpg');"></div>
             <div class="page-content">
-                <h3>PAGE 1: THE BEGINNING</h3>
                 
-                <p class="icon-placeholder">🌟</p>
-                <p>Our hero's journey is about to unfold...</p>
+                <div class="page-text-container">
+                    <h3>PAGE 1: THE BEGINNING</h3>
+                    <p class="icon-placeholder">🌟</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p>Our hero's journey is about to unfold...</p>
+                </div>
             </div>
         </div>
 
         <div class="comic-page" data-page="2">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=2');"></div>
             <div class="page-content">
-                <h3>PAGE 2: THE CALL</h3>
-                <p>A whisper in the darkness. A clue to a mystery.</p>
-                <p class="icon-placeholder">📞</p>
-                <p>The time for action is now.</p>
+                <div class="page-text-container">
+                    <h3>PAGE 2: THE CALL</h3>
+                    <p>A whisper in the darkness. A clue to a mystery.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">📞</p>
+                    <p>The time for action is now.</p>
+                </div>
             </div>
         </div>
         
         <div class="comic-page" data-page="3">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=3');"></div>
             <div class="page-content">
-                <h3>PAGE 3: A NEW ALLY</h3>
-                <p>KAPOW! A surprising friend steps out of the shadows.</p>
-                <p class="icon-placeholder">🤝</p>
-                <p>They must work together to succeed.</p>
+                <div class="page-text-container">
+                    <h3>PAGE 3: A NEW ALLY</h3>
+                    <p>KAPOW! A surprising friend steps out of the shadows.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🤝</p>
+                    <p>They must work together to succeed.</p>
+                </div>
             </div>
         </div>
         
         <div class="comic-page" data-page="4">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=4');"></div>
             <div class="page-content">
-                <h3>PAGE 4: THE OBSTACLE</h3>
-                <p>A massive roadblock appears in their path!</p>
-                <p class="icon-placeholder">🚧</p>
-                <p>This challenge requires clever thinking.</p>
+                <div class="page-text-container">
+                    <h3>PAGE 4: THE OBSTACLE</h3>
+                    <p>A massive roadblock appears in their path!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🚧</p>
+                    <p>This challenge requires clever thinking.</p>
+                </div>
             </div>
         </div>
 
         <div class="comic-page" data-page="5">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=5');"></div>
             <div class="page-content">
-                <h3>PAGE 5: TURNING POINT</h3>
-                <p>Halfway there! A difficult decision must be made.</p>
-                <p class="icon-placeholder">🧭</p>
-                <p>The fate of the mission hangs in the balance.</p>
+                <div class="page-text-container">
+                    <h3>PAGE 5: TURNING POINT</h3>
+                    <p>Halfway there! A difficult decision must be made.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🧭</p>
+                    <p>The fate of the mission hangs in the balance.</p>
+                </div>
             </div>
         </div>
 
         <div class="comic-page" data-page="6">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=6');"></div>
             <div class="page-content">
-                <h3>PAGE 6: THE CHASE</h3>
-                <p>VROOM! A high-speed pursuit through the city streets!</p>
-                <p class="icon-placeholder">🏎️</p>
-                <p>They can't afford to slow down now.</p>
+                <div class="page-text-container">
+                    <h3>PAGE 6: THE CHASE</h3>
+                    <p>VROOM! A high-speed pursuit through the city streets!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🏎️</p>
+                    <p>They can't afford to slow down now.</p>
+                </div>
             </div>
         </div>
         
         <div class="comic-page" data-page="7">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=7');"></div>
             <div class="page-content">
-                <h3>PAGE 7: THE SECRET REVEALED</h3>
-                <p>The mask comes off! The true enemy is finally known.</p>
-                <p class="icon-placeholder">🎭</p>
-                <p>A twist no one saw coming!</p>
+                <div class="page-text-container">
+                    <h3>PAGE 7: THE SECRET REVEALED</h3>
+                    <p>The mask comes off! The true enemy is finally known.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🎭</p>
+                    <p>A twist no one saw coming!</p>
+                </div>
             </div>
         </div>
         
         <div class="comic-page" data-page="8">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=8');"></div>
             <div class="page-content">
-                <h3>PAGE 8: PREPARATIONS</h3>
-                <p>The final stand is imminent. Gear up!</p>
-                <p class="icon-placeholder">🛡️</p>
-                <p>One last chance to train and strategize.</p>
+                <div class="page-text-container">
+                    <h3>PAGE 8: PREPARATIONS</h3>
+                    <p>The final stand is imminent. Gear up!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🛡️</p>
+                    <p>One last chance to train and strategize.</p>
+                </div>
             </div>
         </div>
 
         <div class="comic-page" data-page="9">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=9');"></div>
             <div class="page-content">
-                <h3>PAGE 9: THE CLIMAX</h3>
-                <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
-                <p class="icon-placeholder">💥</p>
-                <p>The tension is unbearable!</p>
+                <div class="page-text-container">
+                    <h3>PAGE 9: THE CLIMAX</h3>
+                    <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">💥</p>
+                    <p>The tension is unbearable!</p>
+                </div>
             </div>
         </div>
 
         <div class="comic-page" data-page="10">
             <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=10');"></div>
             <div class="page-content">
-                <h3>PAGE 10: VICTORY & CONCLUSION</h3>
-                <p>The dust settles. The world is safe. **Tap or swipe right to restart!**</p>
-                <p class="icon-placeholder">✅</p>
-                <p>Thanks for reading! To be continued...</p>
+                <div class="page-text-container">
+                    <h3>PAGE 10: VICTORY & CONCLUSION</h3>
+                    <p>The dust settles. The world is safe. **Tap or swipe right to restart!**</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">✅</p>
+                    <p>Thanks for reading! To be continued...</p>
+                </div>
             </div>
         </div>
     </div>
