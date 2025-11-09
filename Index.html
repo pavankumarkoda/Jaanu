@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10-Page Vibrant Comic Book Reader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <title>Simplified 10-Page Comic Reader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     
     <style>
         :root {
             /* Color Palette */
-            --color-primary: #e63946; /* Bright Red */
-            --color-secondary: #f1faee; /* Light Background */
-            --color-accent: #457b9d; /* Blue Accent */
-            --color-dark: #1d3557; /* Dark Ink */
-            --color-panel-bg: #fff0f5; /* Panel Background (light pink) */
-            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --color-primary: #d9534f; /* Classic Comic Red */
+            --color-secondary: #f0f8ff; /* Light Background */
+            --color-accent: #337ab7; /* Blue Accent */
+            --color-dark: #222; /* Dark Ink */
+            --color-panel-bg: #fff; 
+            --shadow-heavy: 10px 10px 20px rgba(0, 0, 0, 0.5);
         }
 
         body {
@@ -25,14 +24,13 @@
             min-height: 100vh;
             margin: 0;
             background-color: var(--color-dark);
-            font-family: 'Oswald', sans-serif;
-            color: var(--color-dark);
+            font-family: Arial, sans-serif;
             padding: 20px;
         }
 
         .comic-wrapper {
             max-width: 90%;
-            width: 1000px; /* Max width for large screens */
+            width: 1000px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,7 +48,7 @@
             background-color: white;
             overflow: hidden;
             border-radius: 5px;
-            margin: 0 50px; /* Space for buttons */
+            margin: 0 50px;
         }
 
         .comic-page {
@@ -61,59 +59,48 @@
             height: 100%;
             transition: opacity 0.4s ease-in-out; 
             display: none;
-            padding: 15px;
+            padding: 10px;
             box-sizing: border-box;
             background-color: var(--color-secondary);
         }
 
         .comic-page.active {
-            display: grid; 
-            grid-template-rows: 1fr 1fr; 
-            gap: 15px;
+            display: block; /* Simpler display block */
             z-index: 10;
         }
 
-        /* Comic Panel Styling */
+        /* Basic Comic Panel Styling (from first version) */
         .panel {
-            border: 4px solid var(--color-dark);
-            padding: 10px;
+            border: 3px solid var(--color-dark);
+            margin-bottom: 10px;
+            padding: 5px;
             text-align: center;
+            height: calc(50% - 10px); 
             box-sizing: border-box;
             background-color: var(--color-panel-bg);
-            border-radius: 3px;
             overflow: hidden;
-            position: relative;
         }
         
         .panel h3 {
             font-family: 'Bangers', cursive;
-            margin: 5px 0 10px 0;
-            font-size: 1.8em;
+            margin-top: 0;
             color: var(--color-primary);
-            text-shadow: 2px 2px 0px var(--color-dark);
-            line-height: 1;
+            text-shadow: 1px 1px 0px black;
+            font-size: 1.5em;
         }
-
-        .dialogue {
-            font-family: sans-serif;
-            font-size: 0.9em;
-            color: var(--color-dark);
-        }
-
+        
         /* Placeholder for images/art */
         .art-placeholder {
-            height: calc(100% - 40px);
+            height: 70%; 
             background-color: var(--color-accent);
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            font-family: 'Bangers', cursive;
-            font-size: 1.5em;
-            text-shadow: 1px 1px 0px black;
+            font-size: 0.9em;
         }
 
-        /* Navigation Buttons */
+        /* Navigation Buttons (responsive styling retained) */
         .nav-button {
             position: absolute;
             top: 50%;
@@ -128,7 +115,6 @@
             font-weight: bold;
             opacity: 0.9;
             transition: all 0.2s ease-in-out;
-            box-shadow: var(--shadow-light);
             text-transform: uppercase;
         }
 
@@ -140,38 +126,18 @@
 
         .nav-button:disabled {
             background-color: #ccc;
-            border-color: #999;
             cursor: not-allowed;
             opacity: 0.5;
         }
 
-        #prev-button {
-            left: 0;
-            border-radius: 8px 0 0 8px;
-        }
-
-        #next-button {
-            right: 0;
-            border-radius: 0 8px 8px 0;
-        }
+        #prev-button { left: 0; border-radius: 8px 0 0 8px; }
+        #next-button { right: 0; border-radius: 0 8px 8px 0; }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .comic-wrapper {
-                margin: 0;
-                width: 100%;
-            }
-            .comic-container {
-                margin: 0 10px;
-                width: 90vw; 
-                max-width: 450px;
-            }
-            .nav-button {
-                padding: 10px 15px;
-                font-size: 1em;
-            }
-            #prev-button { left: 0; }
-            #next-button { right: 0; }
+            .comic-wrapper { margin: 0; width: 100%; }
+            .comic-container { margin: 0 10px; width: 90vw; max-width: 450px; }
+            .nav-button { padding: 10px 15px; font-size: 1em; }
         }
     </style>
 </head>
@@ -183,127 +149,132 @@
         <div class="comic-container">
             
             <div class="comic-page active" data-page="1">
-                <div class="panel" style="grid-row: 1 / span 2; background-color: var(--color-primary);">
-                    <h3 style="font-size: 3em; color: white; text-shadow: 4px 4px 0px var(--color-dark);">CRYPTO-CRISIS!</h3>
-                    <div class="art-placeholder" style="height: 50%; background-color: white; color: var(--color-dark);">ISSUE #1: The Byte Bandit</div>
-                    <p class="dialogue" style="color: white; font-size: 1.2em;">The city's blockchain is frozen! Only she can save it!</p>
+                <div class="panel">
+                    <h3>PAGE 1 - START!</h3>
+                    <div class="art-placeholder">KAPOW! Our hero leaps!</div>
+                    <p>The adventure begins on the skyscraper edge.</p>
+                </div>
+                <div class="panel">
+                    <h3>THE CALL TO ACTION</h3>
+                    <div class="art-placeholder">A mysterious shadow looms...</div>
+                    <p>The signal is weak, but the threat is clear.</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="2">
                 <div class="panel">
-                    <h3>ZERO HOUR</h3>
-                    <div class="art-placeholder">The City Sleeps...</div>
-                    <p class="dialogue">"A quiet night... too quiet," thought Agent Cipher.</p>
+                    <h3>PAGE 2 - ZAP!</h3>
+                    <div class="art-placeholder">A sudden energy blast!</div>
+                    <p>The villain strikes from the air!</p>
                 </div>
                 <div class="panel">
-                    <h3>THE ALARM!</h3>
-                    <div class="art-placeholder" style="background-color: #ffcc00;">*BEEP-BEEP-BEEP!*</div>
-                    <p class="dialogue">Her wrist communicator screamed: Code Red!</p>
+                    <h3>DODGE LEFT!</h3>
+                    <div class="art-placeholder">Hero rolls away quickly.</div>
+                    <p>Close call! That beam nearly clipped him.</p>
                 </div>
             </div>
             
             <div class="comic-page" data-page="3">
                 <div class="panel">
-                    <h3>THE FREEZE</h3>
-                    <div class="art-placeholder">Frozen Digital Screen</div>
-                    <p class="dialogue">"All transactions halted! The Ledger is locked solid!"</p>
+                    <h3>PAGE 3 - COUNTER ATTACK</h3>
+                    <div class="art-placeholder">Hero throws a grappling hook.</div>
+                    <p>He's trying to close the distance.</p>
                 </div>
                 <div class="panel">
-                    <h3>THE CULPRIT</h3>
-                    <div class="art-placeholder">Shadowy Figure on Rooftop</div>
-                    <p class="dialogue">"He left a digital signature... The Byte Bandit!"</p>
+                    <h3>MISSED!</h3>
+                    <div class="art-placeholder">The hook glances off a building.</div>
+                    <p>The wind resistance is too strong up here.</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="4">
                 <div class="panel">
-                    <h3>KAPOW!</h3>
-                    <div class="art-placeholder" style="background-color: var(--color-primary);">Agent Cipher Leaps!</div>
-                    <p class="dialogue">"No time to waste! I'm taking the shortcut!"</p>
+                    <h3>PAGE 4 - REGROUP</h3>
+                    <div class="art-placeholder">Landing safely on a ledge.</div>
+                    <p>Time to think. Brute force isn't working.</p>
                 </div>
                 <div class="panel">
-                    <h3>THE CHASE BEGINS</h3>
-                    <div class="art-placeholder">Across the Neon Skyscrapers</div>
-                    <p class="dialogue">The pursuit was on, a blur of red and blue.</p>
+                    <h3>VILLAIN'S SMILE</h3>
+                    <div class="art-placeholder">The villain laughs maniacally.</div>
+                    <p>"You can't outsmart me, hero!"</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="5">
                 <div class="panel">
-                    <h3>BYTE BANDIT REVEALED</h3>
-                    <div class="art-placeholder">A Masked Face</div>
-                    <p class="dialogue">"You're too late, Agent! The data is mine!"</p>
+                    <h3>PAGE 5 - THE PLAN</h3>
+                    <div class="art-placeholder">Close-up of the hero's determined face.</div>
+                    <p>He sees a structural weakness in the building.</p>
                 </div>
                 <div class="panel">
-                    <h3>WHAM!</h3>
-                    <div class="art-placeholder" style="background-color: #00bfff;">A Data Beam Attack!</div>
-                    <p class="dialogue">The Bandit fired a concentrated blast of encrypted code!</p>
+                    <h3>LEVERAGE</h3>
+                    <div class="art-placeholder">A quick calculation.</div>
+                    <p>If he can lure the villain closer...</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="6">
                 <div class="panel">
-                    <h3>DODGE!</h3>
-                    <div class="art-placeholder">Cipher Rolls to Safety</div>
-                    <p class="dialogue">"He's faster than I thought! I need a counter-move."</p>
+                    <h3>PAGE 6 - BOLD MOVE</h3>
+                    <div class="art-placeholder">Hero jumps *towards* the villain.</div>
+                    <p>A shocking move that confuses the enemy.</p>
                 </div>
                 <div class="panel">
-                    <h3>THE GADGET</h3>
-                    <div class="art-placeholder">A Small Electronic Device</div>
-                    <p class="dialogue">She activated her Chrono-Decoder, ready to hack back.</p>
+                    <h3>FOOLED YOU!</h3>
+                    <div class="art-placeholder">The villain prepares to fire again.</div>
+                    <p>"You idiot! You jumped right into my trap!"</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="7">
                 <div class="panel">
-                    <h3>ZAP!</h3>
-                    <div class="art-placeholder" style="background-color: #98fb98;">Cipher's Counter-Hack</div>
-                    <p class="dialogue">A green shield of firewalls enveloped the Bandit!</p>
+                    <h3>PAGE 7 - BOOM!</h3>
+                    <div class="art-placeholder" style="background-color: var(--color-primary);">Explosion near the ledge!</div>
+                    <p>The villain's blast hits the weakened point!</p>
                 </div>
                 <div class="panel">
-                    <h3>MALFUNCTION</h3>
-                    <div class="art-placeholder">Bandit's Equipment Sparks</div>
-                    <p class="dialogue">"No! My encryption! It's overloading!"</p>
+                    <h3>COLLAPSE</h3>
+                    <div class="art-placeholder">Rubble and smoke fill the air.</div>
+                    <p>The confusion is perfect cover.</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="8">
                 <div class="panel">
-                    <h3>A FALL</h3>
-                    <div class="art-placeholder">Bandit Stumbles</div>
-                    <p class="dialogue">The distraction bought Cipher precious seconds.</p>
+                    <h3>PAGE 8 - A PUNCH!</h3>
+                    <div class="art-placeholder">Hero lands a solid blow on the villain.</div>
+                    <p>The element of surprise worked!</p>
                 </div>
                 <div class="panel">
-                    <h3>THE RECOVERY</h3>
-                    <div class="art-placeholder">Cipher Secures the Data Drive</div>
-                    <p class="dialogue">The stolen data was safe. Mission accomplished...?</p>
+                    <h3>DOWN HE GOES!</h3>
+                    <div class="art-placeholder">The villain tumbles.</div>
+                    <p>He drops the device! Now's the time!</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="9">
                 <div class="panel">
-                    <h3>ESCAPE</h3>
-                    <div class="art-placeholder">Bandit Vanishes into Smoke</div>
-                    <p class="dialogue">"He got away! But why did he leave this behind?"</p>
+                    <h3>PAGE 9 - DEVICE SECURED</h3>
+                    <div class="art-placeholder">Hero holds up the captured device.</div>
+                    <p>The city is safe once more!</p>
                 </div>
                 <div class="panel">
-                    <h3>THE CLUE</h3>
-                    <div class="art-placeholder" style="background-color: #ffa07a;">A Strange Symbol</div>
-                    <p class="dialogue">A small, embossed symbol on the wall. It wasn't his style.</p>
+                    <h3>THE ESCAPE</h3>
+                    <div class="art-placeholder">The villain uses a smoke bomb to vanish.</div>
+                    <p>"This isn't over, hero!"</p>
                 </div>
             </div>
 
             <div class="comic-page" data-page="10">
                 <div class="panel">
-                    <h3>A NEW THREAT</h3>
-                    <div class="art-placeholder" style="background-color: var(--color-dark); color: var(--color-primary);">WHO IS BEHIND THIS?</div>
-                    <p class="dialogue" style="font-size: 1.1em;">"The Byte Bandit was just a pawn..."</p>
+                    <h3>PAGE 10 - PEACE RESTORED</h3>
+                    <div class="art-placeholder" style="background-color: var(--color-dark);">The hero stands tall.</div>
+                    <p>Another victory, but at what cost?</p>
                 </div>
-                <div class="panel" style="background-color: var(--color-accent);">
-                    <h3 style="color: white; text-shadow: 2px 2px 0px var(--color-dark);">THE END?</h3>
-                    <p class="dialogue" style="color: white; font-size: 1.2em;">Find out what happens next in **CRYPTO-CRISIS #2!**</p>
-                    <div class="art-placeholder" style="height: 30%; background-color: var(--color-dark); font-size: 1em;">TO BE CONTINUED...</div>
+                <div class="panel" style="background-color: var(--color-primary);">
+                    <h3 style="color: white; text-shadow: 2px 2px 0px var(--color-dark);">TO BE CONTINUED...</h3>
+                    <p style="color: white;">Tune in for the next electrifying issue!</p>
+                    <div class="art-placeholder" style="height: 30%; background-color: white; color: var(--color-dark);">ISSUE #2 PREVIEW</div>
                 </div>
             </div>
 
@@ -316,7 +287,7 @@
         const pages = document.querySelectorAll('.comic-page');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
-        let currentPageIndex = 0; // Starts at Page 1 (index 0)
+        let currentPageIndex = 0; 
 
         function updatePageDisplay() {
             pages.forEach((page, index) => {
@@ -350,7 +321,7 @@
         nextButton.addEventListener('click', nextPage);
         prevButton.addEventListener('click', prevPage);
 
-        // Optional: Keyboard navigation
+        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 nextPage();
@@ -363,4 +334,5 @@
         updatePageDisplay();
     </script>
 </body>
-</html>
+    </html>
+    
