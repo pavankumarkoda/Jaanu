@@ -3,142 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Reader Comic: Book Swipe & Flip (Final)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-   <style>
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        background-color: #f5f5dc; /* Beige/sepia background */
-        font-family: 'Bangers', cursive, sans-serif;
-        perspective: 1500px; 
-        user-select: none;
-    }
+    <title>E-Reader Comic: Neat UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Body & Container Styling (E-Reader Look) --- */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #e0e0e0; /* Light gray background for contrast */
+            font-family: 'Roboto', sans-serif;
+            perspective: 1800px; /* Slightly deeper perspective */
+            user-select: none;
+        }
 
-    .comic-container {
-        position: relative;
-        width: 90%; 
-        max-width: 450px; 
-        height: 90vh;
-        max-height: 700px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        border: 1px solid #999;
-        background-color: white;
-        overflow: visible; /* Important for 3D flip */
-        border-radius: 5px;
-        cursor: pointer; 
-    }
-
-    /* -------------------------------------- */
-    /* Core Page-Flip CSS */
-    /* -------------------------------------- */
-    .comic-page {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: none; 
-        box-sizing: border-box;
-        background-color: white;
-        padding: 10px;
+        .comic-container {
+            position: relative;
+            width: 90%; 
+            max-width: 450px; 
+            height: 90vh;
+            max-height: 700px;
+            /* Polished shadow for depth */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+            border-radius: 12px; /* Smoother, more modern corners */
+            background-color: #fcfcfc; /* Clean white base */
+            overflow: visible; 
+            cursor: pointer; 
+        }
         
-        transform-origin: left center;
-        transform: rotateY(0deg); 
-        transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
-        backface-visibility: hidden;
-        z-index: 1; 
-    }
+        /* -------------------------------------- */
+        /* Core Page-Flip CSS (Neater Transition) */
+        /* -------------------------------------- */
+        .comic-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; 
+            box-sizing: border-box;
+            background-color: #fefefe; /* Very light page color */
+            padding: 15px; /* Increased internal padding */
+            border-radius: 12px; /* Match container radius */
+            
+            transform-origin: left center;
+            transform: rotateY(0deg); 
+            /* Smoother, professional timing function */
+            transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
+            backface-visibility: hidden;
+            z-index: 1; 
+            /* Subtle page shadow on the turning edge */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+        }
 
-    .comic-page.active {
-        display: flex;
-        transform: rotateY(0deg); 
-        z-index: 2; 
-    }
+        .comic-page.active {
+            display: flex;
+            transform: rotateY(0deg); 
+            z-index: 2; 
+        }
 
-    /* Flipping Page (The old page moving away) */
-    .comic-page.flipping-right {
-        transform-origin: left center;
-        transform: rotateY(-180deg);
-        z-index: 10; 
-    }
-    
-    .comic-page.flipping-left {
-        transform-origin: right center;
-        transform: rotateY(180deg);
-        z-index: 10;
-    }
+        /* Flipping Page (The old page moving away) */
+        .comic-page.flipping-right {
+            transform-origin: left center;
+            transform: rotateY(-180deg);
+            z-index: 10; 
+        }
+        
+        .comic-page.flipping-left {
+            transform-origin: right center;
+            transform: rotateY(180deg);
+            z-index: 10;
+        }
 
-    /* Incoming Page (The new page rotating into view) */
-    .comic-page.active.next-page {
-        transform-origin: left center;
-        transform: rotateY(180deg); 
-    }
-    
-    .comic-page.active.prev-page {
-        transform-origin: right center;
-        transform: rotateY(-180deg); 
-    }
+        /* Incoming Page (The new page rotating into view) */
+        .comic-page.active.next-page {
+            transform-origin: left center;
+            transform: rotateY(180deg); 
+        }
+        
+        .comic-page.active.prev-page {
+            transform-origin: right center;
+            transform: rotateY(-180deg); 
+        }
 
-    /* -------------------------------------- */
-    /* Content & Indicator Styling */
-    /* -------------------------------------- */
-    .page-content {
-        width: 100%; height: 100%;
-        display: flex; flex-direction: column;
-        justify-content: center; align-items: center;
-        text-align: center;
-        background-color: #fffaf0; 
-        border: 1px dashed #999; 
-        padding: 20px;
-        box-sizing: border-box;
-    }
-    
-    .page-content h3 { margin-top: 0; color: #4a4a4a; font-size: 1.5em; margin-bottom: 15px; }
-    .page-content p { color: #333; font-family: serif; font-size: 1.1em; margin: 5px 0; }
-    .icon-placeholder { font-size: 3em; margin: 20px 0; }
+        /* -------------------------------------- */
+        /* Content & Indicator Styling (Cleaner Look) */
+        /* -------------------------------------- */
+        .page-content {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            background-color: #fffaf0; /* Retaining the warm off-white content color */
+            border: 1px solid #dcdcdc; /* Clean, subtle border */
+            border-radius: 8px; /* Slightly rounded content area */
+            padding: 25px;
+            box-sizing: border-box;
+        }
+        
+        .page-content h3 { 
+            margin-top: 0; 
+            color: #2c3e50; /* Darker, professional blue/gray text */
+            font-family: 'Bangers', cursive; /* Comic font for headers */
+            font-size: 2em; /* Bigger headers */
+            text-shadow: 1px 1px 0 #fff; /* Slight effect */
+            margin-bottom: 20px; 
+        }
 
-    /* The temporary indicators themselves */
-    .swipe-indicator {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 3em;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        z-index: 30; 
-        pointer-events: none;
-        background-color: rgba(255, 255, 255, 0.6); /* Semi-transparent background for visibility */
-        border-radius: 50%;
-        padding: 5px 10px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    }
+        .page-content p { 
+            color: #34495e; 
+            font-family: 'Roboto', sans-serif; /* Clean font for body text */
+            font-size: 1.1em; 
+            line-height: 1.4;
+            margin: 8px 0; 
+        }
+        
+        .icon-placeholder { 
+            font-size: 4em; /* Larger icons */
+            margin: 25px 0; 
+            color: #e74c3c; /* Accent color for pop */
+        }
 
-    .swipe-indicator.show { 
-        opacity: 1; /* Made fully opaque when showing */
-        /* Slightly larger size when showing to draw attention */
-        font-size: 3.5em; 
-    }
+        /* Temporary Indicators */
+        .swipe-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 30; 
+            pointer-events: none;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark background for better contrast */
+            color: white; /* White emoji/text */
+            border-radius: 6px; 
+            padding: 5px 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
 
-    /* ********* THE FIX IS HERE ********* */
-    #left-indicator { 
-        left: 0px; /* Positioned INSIDE the container on the left edge */
-        padding-left: 15px;
-    }
-    #right-indicator { 
-        right: 0px; /* Positioned INSIDE the container on the right edge */
-        padding-right: 15px;
-    }
-</style>
+        .swipe-indicator.show { 
+            opacity: 0.9;
+            font-size: 3em; 
+        }
+
+        #left-indicator { left: 5px; } 
+        #right-indicator { right: 5px; }
+    </style>
 </head>
 <body>
 
     <div class="comic-container" id="comic-book">
-        <span id="left-indicator" class="swipe-indicator" data-icon="👈"></span>
-        <span id="right-indicator" class="swipe-indicator" data-icon="👉"></span>
+        <span id="left-indicator" class="swipe-indicator">👈</span>
+        <span id="right-indicator" class="swipe-indicator">👉</span>
 
         <div class="comic-page active" data-page="1">
             <div class="page-content">
@@ -333,31 +351,29 @@
             const deltaX = touchendX - touchstartX;
 
             if (Math.abs(deltaX) < swipeThreshold) {
-                // Not a swipe, handle as a tap
                 handleTap(e);
                 return;
             }
 
             if (deltaX > 0) {
-                // Swiped Right -> Previous Page
                 prevPage();
             } else {
-                // Swiped Left -> Next Page
                 nextPage();
             }
-            touchstartX = 0; // Reset for next gesture
+            touchstartX = 0; 
             touchendX = 0;
         }
 
         function handleTap(e) {
             if (isFlipping) return;
             // Use clientX for desktop mouse click, touch for mobile
-            const clickX = e.clientX || e.changedTouches[0].clientX; 
-
+            const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
+            if (clientX === null) return;
+            
             const containerRect = comicBook.getBoundingClientRect();
-            const clickXRelative = clickX - containerRect.left;
+            const clickXRelative = clientX - containerRect.left;
             const center = containerRect.width / 2;
-            const margin = containerRect.width * 0.25; // Define center tap area
+            const margin = containerRect.width * 0.20; // Define smaller center tap area (20% from center)
 
             if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) {
                 // Right side tap (Go Next)
@@ -371,7 +387,6 @@
             }
         }
         
-        // Use mousedown/mouseup for non-swipe clicks on desktop to avoid conflicts with touch handlers
         comicBook.addEventListener('click', handleTap, false);
 
         document.addEventListener('keydown', (e) => {
