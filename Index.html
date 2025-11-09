@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Reader Comic: Bottom Corner Flip</title>
+    <title>E-Reader Comic: Bottom Corner Flip (FIXED)</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* --- General Body & Container Styling (E-Reader Look) --- */
@@ -13,9 +13,9 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #e0e0e0; /* Light gray background for contrast */
+            background-color: #e0e0e0; 
             font-family: 'Roboto', sans-serif;
-            perspective: 1800px; /* Slightly deeper perspective */
+            perspective: 1800px; 
             user-select: none;
         }
 
@@ -47,7 +47,7 @@
             padding: 15px; 
             border-radius: 12px; 
             
-            /* Default: Start rotation from the left center for neutral state */
+            /* Default transform-origin is important for proper reset */
             transform-origin: left center;
             transform: rotateY(0deg); 
             transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
@@ -62,33 +62,31 @@
             z-index: 2; 
         }
 
-        /* --- NEXT PAGE TURN (Flipping right, anchored at Bottom Right) --- */
-
+        /* --- NEXT PAGE TURN (Flipping right, anchored at Bottom Left) --- */
+        /* This is the page currently visible, flipping away */
         .comic-page.flipping-right {
-            /* The page that is currently visible flips away */
             transform-origin: left bottom; /* Anchor to bottom left corner */
             transform: rotateY(-180deg);
             z-index: 10; 
         }
         
+        /* The new page starts rotated, anchored at bottom left, ready to receive the transition */
         .comic-page.active.next-page {
-            /* The new page starts rotated, anchored at bottom left */
             transform-origin: left bottom;
             transform: rotateY(180deg); 
         }
 
 
-        /* --- PREVIOUS PAGE TURN (Flipping left, anchored at Bottom Left) --- */
-        
+        /* --- PREVIOUS PAGE TURN (Flipping left, anchored at Bottom Right) --- */
+        /* This is the page currently visible, flipping away */
         .comic-page.flipping-left {
-            /* The page that is currently visible flips away */
             transform-origin: right bottom; /* Anchor to bottom right corner */
             transform: rotateY(180deg);
             z-index: 10;
         }
         
+        /* The new page starts rotated, anchored at bottom right, ready to receive the transition */
         .comic-page.active.prev-page {
-            /* The new page starts rotated, anchored at bottom right */
             transform-origin: right bottom;
             transform: rotateY(-180deg); 
         }
@@ -244,6 +242,13 @@
         let touchendX = 0;
         const swipeThreshold = 50; 
 
+        // --- Utility to clean up classes after flip ---
+        function resetPageClasses(page) {
+             page.classList.remove('flipping-right', 'flipping-left', 'next-page', 'prev-page');
+             // Reset transform-origin to default after the flip animation is done
+             page.style.transformOrigin = 'left center'; 
+        }
+
         // --- Indicator Logic (Only on Page 1) ---
         function showIndicators() {
             leftIndicator.classList.remove('show');
@@ -266,19 +271,22 @@
                 currentPageIndex++;
                 const newPage = pages[currentPageIndex];
 
-                // 1. Prepare the new page
+                // 1. Prepare the new page (Set initial state and display)
                 newPage.classList.add('active', 'next-page'); 
                 newPage.style.display = 'flex'; 
+                
+                // 2. Critical: Force Reflow before applying the final class
                 newPage.offsetWidth; 
 
-                // 2. Start the transition
+                // 3. Start the transition
                 oldPage.classList.add('flipping-right'); 
-                newPage.classList.remove('next-page'); 
+                newPage.classList.remove('next-page'); // Triggers the smooth transition
 
-                // 3. Clean up
+                // 4. Clean up
                 setTimeout(() => {
-                    oldPage.classList.remove('active', 'flipping-right');
+                    oldPage.classList.remove('active');
                     oldPage.style.display = 'none';
+                    resetPageClasses(oldPage);
                     isFlipping = false;
                 }, flipDuration);
             }
@@ -291,19 +299,22 @@
                 currentPageIndex--;
                 const newPage = pages[currentPageIndex];
                 
-                // 1. Prepare the new page
+                // 1. Prepare the new page (Set initial state and display)
                 newPage.classList.add('active', 'prev-page');
                 newPage.style.display = 'flex';
+                
+                // 2. Critical: Force Reflow before applying the final class
                 newPage.offsetWidth; 
 
-                // 2. Start the transition
+                // 3. Start the transition
                 oldPage.classList.add('flipping-left'); 
-                newPage.classList.remove('prev-page'); 
+                newPage.classList.remove('prev-page'); // Triggers the smooth transition
 
-                // 3. Clean up
+                // 4. Clean up
                 setTimeout(() => {
-                    oldPage.classList.remove('active', 'flipping-left');
+                    oldPage.classList.remove('active');
                     oldPage.style.display = 'none';
+                    resetPageClasses(oldPage);
                     isFlipping = false;
 
                     if (currentPageIndex === 0) {
