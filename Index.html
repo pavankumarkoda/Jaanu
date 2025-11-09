@@ -3,130 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Reader Comic: Book Swipe & Flip</title>
+    <title>E-Reader Comic: Book Swipe & Flip (Final)</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <style>
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        background-color: #f5f5dc; /* Beige/sepia background */
-        font-family: 'Bangers', cursive, sans-serif;
-        perspective: 1500px; /* Stronger perspective for a deeper 3D curve */
-        user-select: none;
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5dc; /* Beige/sepia background */
+            font-family: 'Bangers', cursive, sans-serif;
+            perspective: 1500px; /* Strong perspective for 3D curve */
+            user-select: none;
+        }
 
-    .comic-container {
-        position: relative;
-        width: 90%; 
-        max-width: 450px; 
-        height: 90vh;
-        max-height: 700px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        border: 1px solid #999;
-        background-color: white;
-        overflow: visible; 
-        border-radius: 5px;
-        cursor: pointer; 
-    }
+        .comic-container {
+            position: relative;
+            width: 90%; 
+            max-width: 450px; 
+            height: 90vh;
+            max-height: 700px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            border: 1px solid #999;
+            background-color: white;
+            overflow: visible; 
+            border-radius: 5px;
+            cursor: pointer; 
+        }
 
-    /* -------------------------------------- */
-    /* Core Page-Flip CSS */
-    /* -------------------------------------- */
-    .comic-page {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: none; 
-        box-sizing: border-box;
-        background-color: white;
-        padding: 10px;
+        /* -------------------------------------- */
+        /* Core Page-Flip CSS */
+        /* -------------------------------------- */
+        .comic-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; 
+            box-sizing: border-box;
+            background-color: white;
+            padding: 10px;
+            
+            transform-origin: left center;
+            transform: rotateY(0deg); 
+            /* Custom cubic-bezier for a natural, accelerating/decelerating flip */
+            transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
+            backface-visibility: hidden;
+            /* Default layer */
+            z-index: 1; 
+        }
+
+        .comic-page.active {
+            display: flex;
+            transform: rotateY(0deg); 
+            /* Active page on top by default */
+            z-index: 2; 
+        }
+
+        /* Flipping Page (The old page moving away) */
+        .comic-page.flipping-right {
+            transform-origin: left center;
+            transform: rotateY(-180deg);
+            z-index: 10; /* Must be highest layer during flip */
+        }
         
-        /* Set up 3D space */
-        transform-origin: left center;
-        transform: rotateY(0deg); 
-        /* Use a custom cubic-bezier for a more natural, accelerating/decelerating flip */
-        transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
-        backface-visibility: hidden;
-    }
+        .comic-page.flipping-left {
+            transform-origin: right center;
+            transform: rotateY(180deg);
+            z-index: 10;
+        }
 
-    .comic-page.active {
-        display: flex;
-        z-index: 10;
-        transform: rotateY(0deg); 
-    }
-    
-    .page-content {
-        /* Content styling remains the same */
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background-color: #fffaf0; 
-        border: 1px dashed #999; 
-        padding: 20px;
-        box-sizing: border-box;
-    }
+        /* Incoming Page (The new page rotating into view) */
+        .comic-page.active.next-page {
+            transform-origin: left center;
+            transform: rotateY(180deg); 
+        }
+        
+        .comic-page.active.prev-page {
+            transform-origin: right center;
+            transform: rotateY(-180deg); 
+        }
 
+        /* -------------------------------------- */
+        /* Content & Indicator Styling */
+        /* -------------------------------------- */
+        .page-content {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            background-color: #fffaf0; 
+            border: 1px dashed #999; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .page-content h3 { margin-top: 0; color: #4a4a4a; font-size: 1.5em; margin-bottom: 15px; }
+        .page-content p { color: #333; font-family: serif; font-size: 1.1em; margin: 5px 0; }
+        .icon-placeholder { font-size: 3em; margin: 20px 0; }
 
-    /* Next Page Flip (Turning page right to reveal new page) */
-    .comic-page.flipping-right {
-        /* The page that is currently visible flips away */
-        transform: rotateY(-180deg);
-        z-index: 20; 
-    }
-    
-    .comic-page.active.next-page {
-        /* The new page starts rotated, ready to receive the flip animation */
-        transform-origin: left center;
-        transform: rotateY(180deg); 
-        /* Ensure it gets the same transition timing */
-        transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
-    }
+        .swipe-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 30; /* Above all pages */
+            pointer-events: none;
+        }
 
-
-    /* Previous Page Flip (Turning page left to reveal old page) */
-    .comic-page.flipping-left {
-        /* The page that is currently visible flips away */
-        transform-origin: right center;
-        transform: rotateY(180deg);
-        z-index: 20;
-    }
-    
-    .comic-page.active.prev-page {
-        /* The new page starts rotated, ready to receive the flip animation */
-        transform-origin: right center;
-        transform: rotateY(-180deg); 
-        /* Ensure it gets the same transition timing */
-        transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1); 
-    }
-
-    /* Fix for Z-index: Make sure the flipping page is always above the page it is revealing/covering */
-    .comic-page.active {
-        z-index: 1; /* Default layer */
-    }
-    .comic-page.flipping-right, .comic-page.flipping-left {
-        z-index: 10; /* Flipping layer */
-    }
-
-    /* -------------------------------------- */
-    /* Indicator/Placeholder Styling (Kept for completeness) */
-    /* -------------------------------------- */
-    .page-content h3 { margin-top: 0; color: #4a4a4a; font-size: 1.5em; margin-bottom: 15px; }
-    .page-content p { color: #333; font-family: serif; font-size: 1.1em; margin: 5px 0; }
-    .icon-placeholder { font-size: 3em; margin: 20px 0; }
-    .swipe-indicator { position: absolute; top: 50%; transform: translateY(-50%); font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out; z-index: 30; pointer-events: none; }
-    .swipe-indicator.show { opacity: 0.8; transition: opacity 0.3s ease-in-out; }
-    #left-indicator { left: -40px; }
-    #right-indicator { right: -40px; }
-</style>
+        .swipe-indicator.show { opacity: 0.8; }
+        #left-indicator { left: -40px; }
+        #right-indicator { right: -40px; }
+    </style>
 </head>
 <body>
 
@@ -223,29 +215,24 @@
                 <p>Thanks for reading! To be continued...</p>
             </div>
         </div>
+    </div>
 
-        </div>
-
-  <script>
+    <script>
         const pages = document.querySelectorAll('.comic-page');
         const comicBook = document.getElementById('comic-book');
         const leftIndicator = document.getElementById('left-indicator');
         const rightIndicator = document.getElementById('right-indicator');
         let currentPageIndex = 0;
         const flipDuration = 600; // Match CSS transition (0.6s)
-        let isFlipping = false; // Prevent double-flip during animation
+        let isFlipping = false;
 
         // Variables for Swipe Detection
         let touchstartX = 0;
         let touchendX = 0;
-        const swipeThreshold = 50; // Minimum distance for a recognized swipe
+        const swipeThreshold = 50; 
 
-        /**
-         * ANIMATION LOGIC
-         */
-
+        // --- Indicator Logic ---
         function showIndicators() {
-            // Hide all indicators
             leftIndicator.classList.remove('show');
             rightIndicator.classList.remove('show');
 
@@ -256,43 +243,33 @@
                 rightIndicator.classList.add('show');
             }
 
-            // Hide them after 3 seconds
             setTimeout(() => {
                 leftIndicator.classList.remove('show');
                 rightIndicator.classList.remove('show');
             }, 3000);
         }
         
+        // --- Page Navigation Logic ---
         function nextPage() {
             if (currentPageIndex < pages.length - 1 && !isFlipping) {
                 isFlipping = true;
-                const oldPageIndex = currentPageIndex;
+                const oldPage = pages[currentPageIndex];
                 currentPageIndex++;
-
-                const oldPage = pages[oldPageIndex];
                 const newPage = pages[currentPageIndex];
 
-                // 1. Prepare the new page (start rotated and visible)
-                newPage.classList.add('active'); 
+                // 1. Prepare the new page (set display and initial rotation)
+                newPage.classList.add('active', 'next-page'); 
                 newPage.style.display = 'flex'; 
-                newPage.classList.add('next-page'); // Sets initial rotation of 180deg (hidden)
-                
-                // 2. Force a repaint/reflow (crucial for CSS transitions to work correctly)
-                newPage.offsetWidth; 
+                newPage.offsetWidth; // Force reflow (CRITICAL for flip)
 
-                // 3. Start the transition (flipping the old page and rotating the new page)
+                // 2. Start the transition
                 oldPage.classList.add('flipping-right'); // Old page flips away
-                newPage.classList.remove('next-page'); // New page rotates to 0deg (becomes visible)
+                newPage.classList.remove('next-page'); // New page rotates into view
 
-
-                // 4. Clean up classes after the flip is complete
+                // 3. Clean up after the flip
                 setTimeout(() => {
-                    // Reset old page
                     oldPage.classList.remove('active', 'flipping-right');
                     oldPage.style.display = 'none';
-
-                    // Clean up new page (it remains active)
-                    
                     isFlipping = false;
                     showIndicators();
                 }, flipDuration);
@@ -302,52 +279,30 @@
         function prevPage() {
             if (currentPageIndex > 0 && !isFlipping) {
                 isFlipping = true;
-                const oldPageIndex = currentPageIndex;
+                const oldPage = pages[currentPageIndex];
                 currentPageIndex--;
-                
-                const oldPage = pages[oldPageIndex];
                 const newPage = pages[currentPageIndex];
+                
+                // 1. Prepare the new page (set display and initial rotation)
+                newPage.classList.add('active', 'prev-page');
+                newPage.style.display = 'flex';
+                newPage.offsetWidth; // Force reflow (CRITICAL for flip)
 
-                // 1. Prepare the new page (start rotated and visible)
-                newPage.classList.add('active');
-                newPage.style.display = 'flex'; 
-                newPage.classList.add('prev-page'); // Sets initial rotation of -180deg (hidden)
-
-                // 2. Force a repaint/reflow
-                newPage.offsetWidth; 
-
-                // 3. Start the transition (flipping the old page and rotating the new page)
+                // 2. Start the transition
                 oldPage.classList.add('flipping-left'); // Old page flips away
-                newPage.classList.remove('prev-page'); // New page rotates to 0deg (becomes visible)
+                newPage.classList.remove('prev-page'); // New page rotates into view
 
-
-                // 4. Clean up classes after the flip is complete
+                // 3. Clean up after the flip
                 setTimeout(() => {
-                    // Reset old page
                     oldPage.classList.remove('active', 'flipping-left');
                     oldPage.style.display = 'none';
-
-                    // Clean up new page (it remains active)
-
                     isFlipping = false;
                     showIndicators();
                 }, flipDuration);
             }
         }
         
-        // Initial setup to ensure only the first page is visible and indicators show
-        pages.forEach((page, index) => {
-            if (index !== 0) {
-                page.style.display = 'none';
-            }
-        });
-        showIndicators();
-
-        /**
-         * USER INPUT HANDLING (Swipe, Tap, and Keyboard)
-         */
-
-        // --- Touch/Swipe Handlers ---
+        // --- Input Handlers ---
 
         comicBook.addEventListener('touchstart', e => {
             if (isFlipping) return;
@@ -370,45 +325,40 @@
             }
 
             if (deltaX > 0) {
-                // Swiped Right -> Go Previous Page
+                // Swiped Right -> Previous Page
                 prevPage();
             } else {
-                // Swiped Left -> Go Next Page
+                // Swiped Left -> Next Page
                 nextPage();
             }
+            touchstartX = 0; // Reset for next gesture
+            touchendX = 0;
         }
-
-        // --- Tap Handler (for mouse click or light tap) ---
 
         function handleTap(e) {
             if (isFlipping) return;
-            // Get the X position of the click/tap relative to the container
+            // Use clientX for desktop mouse click, touch for mobile
+            const clickX = e.clientX || e.changedTouches[0].clientX; 
+
             const containerRect = comicBook.getBoundingClientRect();
-            const clickX = e.clientX - containerRect.left;
+            const clickXRelative = clickX - containerRect.left;
             const center = containerRect.width / 2;
+            const margin = containerRect.width * 0.25; // Define center tap area
 
-            // Prevent taps from propagating if a swipe was detected
-            if (e.type === 'click' && (touchstartX !== 0 || touchendX !== 0)) {
-                 touchstartX = 0; // Reset state for next time
-                 touchendX = 0;
-                 return;
-            }
-
-            if (clickX > center && currentPageIndex < pages.length - 1) {
-                // Right half tap
+            if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) {
+                // Right side tap (Go Next)
                 nextPage();
-            } else if (clickX < center && currentPageIndex > 0) {
-                // Left half tap
+            } else if (clickXRelative < center - margin && currentPageIndex > 0) {
+                // Left side tap (Go Previous)
                 prevPage();
             } else {
-                // Tap on the edge or current page limit, show indicators for help
+                // Center tap (Show Indicators)
                 showIndicators(); 
             }
         }
         
+        // Use mousedown/mouseup for non-swipe clicks on desktop to avoid conflicts with touch handlers
         comicBook.addEventListener('click', handleTap, false);
-
-        // --- Keyboard Navigation (Optional, but helpful for testing) ---
 
         document.addEventListener('keydown', (e) => {
             if (isFlipping) return;
@@ -419,6 +369,13 @@
             }
         });
 
+        // Initial setup
+        pages.forEach((page, index) => {
+            if (index !== 0) {
+                page.style.display = 'none';
+            }
+        });
+        showIndicators();
     </script>
 </body>
 </html>
