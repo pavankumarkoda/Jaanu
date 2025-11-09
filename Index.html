@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Reader Comic: Neat UI</title>
+    <title>E-Reader Comic: Bottom Corner Flip</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* --- General Body & Container Styling (E-Reader Look) --- */
@@ -25,16 +25,15 @@
             max-width: 450px; 
             height: 90vh;
             max-height: 700px;
-            /* Polished shadow for depth */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-            border-radius: 12px; /* Smoother, more modern corners */
-            background-color: #fcfcfc; /* Clean white base */
+            border-radius: 12px; 
+            background-color: #fcfcfc; 
             overflow: visible; 
             cursor: pointer; 
         }
         
         /* -------------------------------------- */
-        /* Core Page-Flip CSS (Neater Transition) */
+        /* Core Page-Flip CSS (Bottom Corner Focus) */
         /* -------------------------------------- */
         .comic-page {
             position: absolute;
@@ -44,17 +43,16 @@
             height: 100%;
             display: none; 
             box-sizing: border-box;
-            background-color: #fefefe; /* Very light page color */
-            padding: 15px; /* Increased internal padding */
-            border-radius: 12px; /* Match container radius */
+            background-color: #fefefe; 
+            padding: 15px; 
+            border-radius: 12px; 
             
+            /* Default: Start rotation from the left center for neutral state */
             transform-origin: left center;
             transform: rotateY(0deg); 
-            /* Smoother, professional timing function */
             transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
             backface-visibility: hidden;
             z-index: 1; 
-            /* Subtle page shadow on the turning edge */
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
         }
 
@@ -64,90 +62,73 @@
             z-index: 2; 
         }
 
-        /* Flipping Page (The old page moving away) */
+        /* --- NEXT PAGE TURN (Flipping right, anchored at Bottom Right) --- */
+
         .comic-page.flipping-right {
-            transform-origin: left center;
+            /* The page that is currently visible flips away */
+            transform-origin: left bottom; /* Anchor to bottom left corner */
             transform: rotateY(-180deg);
             z-index: 10; 
         }
         
+        .comic-page.active.next-page {
+            /* The new page starts rotated, anchored at bottom left */
+            transform-origin: left bottom;
+            transform: rotateY(180deg); 
+        }
+
+
+        /* --- PREVIOUS PAGE TURN (Flipping left, anchored at Bottom Left) --- */
+        
         .comic-page.flipping-left {
-            transform-origin: right center;
+            /* The page that is currently visible flips away */
+            transform-origin: right bottom; /* Anchor to bottom right corner */
             transform: rotateY(180deg);
             z-index: 10;
         }
-
-        /* Incoming Page (The new page rotating into view) */
-        .comic-page.active.next-page {
-            transform-origin: left center;
-            transform: rotateY(180deg); 
-        }
         
         .comic-page.active.prev-page {
-            transform-origin: right center;
+            /* The new page starts rotated, anchored at bottom right */
+            transform-origin: right bottom;
             transform: rotateY(-180deg); 
         }
 
         /* -------------------------------------- */
-        /* Content & Indicator Styling (Cleaner Look) */
+        /* Content & Indicator Styling */
         /* -------------------------------------- */
         .page-content {
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             text-align: center;
-            background-color: #fffaf0; /* Retaining the warm off-white content color */
-            border: 1px solid #dcdcdc; /* Clean, subtle border */
-            border-radius: 8px; /* Slightly rounded content area */
+            background-color: #fffaf0; 
+            border: 1px solid #dcdcdc; 
+            border-radius: 8px; 
             padding: 25px;
             box-sizing: border-box;
         }
         
         .page-content h3 { 
-            margin-top: 0; 
-            color: #2c3e50; /* Darker, professional blue/gray text */
-            font-family: 'Bangers', cursive; /* Comic font for headers */
-            font-size: 2em; /* Bigger headers */
-            text-shadow: 1px 1px 0 #fff; /* Slight effect */
-            margin-bottom: 20px; 
+            margin-top: 0; color: #2c3e50; font-family: 'Bangers', cursive; 
+            font-size: 2em; text-shadow: 1px 1px 0 #fff; margin-bottom: 20px; 
         }
-
         .page-content p { 
-            color: #34495e; 
-            font-family: 'Roboto', sans-serif; /* Clean font for body text */
-            font-size: 1.1em; 
-            line-height: 1.4;
-            margin: 8px 0; 
+            color: #34495e; font-family: 'Roboto', sans-serif; 
+            font-size: 1.1em; line-height: 1.4; margin: 8px 0; 
         }
-        
         .icon-placeholder { 
-            font-size: 4em; /* Larger icons */
-            margin: 25px 0; 
-            color: #e74c3c; /* Accent color for pop */
+            font-size: 4em; margin: 25px 0; color: #e74c3c; 
         }
 
-        /* Temporary Indicators */
         .swipe-indicator {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3em;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            z-index: 30; 
-            pointer-events: none;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark background for better contrast */
-            color: white; /* White emoji/text */
-            border-radius: 6px; 
-            padding: 5px 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            position: absolute; top: 50%; transform: translateY(-50%);
+            font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out;
+            z-index: 30; pointer-events: none;
+            background-color: rgba(0, 0, 0, 0.5); color: white; border-radius: 6px; 
+            padding: 5px 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
-        .swipe-indicator.show { 
-            opacity: 0.9;
-            font-size: 3em; 
-        }
-
+        .swipe-indicator.show { opacity: 0.9; font-size: 3em; }
         #left-indicator { left: 5px; } 
         #right-indicator { right: 5px; }
     </style>
@@ -255,7 +236,7 @@
         const leftIndicator = document.getElementById('left-indicator');
         const rightIndicator = document.getElementById('right-indicator');
         let currentPageIndex = 0;
-        const flipDuration = 600; // Match CSS transition (0.6s)
+        const flipDuration = 600; 
         let isFlipping = false;
 
         // Variables for Swipe Detection
@@ -263,22 +244,18 @@
         let touchendX = 0;
         const swipeThreshold = 50; 
 
-        // --- Indicator Logic ---
+        // --- Indicator Logic (Only on Page 1) ---
         function showIndicators() {
             leftIndicator.classList.remove('show');
             rightIndicator.classList.remove('show');
 
-            if (currentPageIndex > 0) {
-                leftIndicator.classList.add('show');
-            }
-            if (currentPageIndex < pages.length - 1) {
+            if (currentPageIndex === 0) {
                 rightIndicator.classList.add('show');
-            }
 
-            setTimeout(() => {
-                leftIndicator.classList.remove('show');
-                rightIndicator.classList.remove('show');
-            }, 3000);
+                setTimeout(() => {
+                    rightIndicator.classList.remove('show');
+                }, 3000);
+            }
         }
         
         // --- Page Navigation Logic ---
@@ -289,21 +266,20 @@
                 currentPageIndex++;
                 const newPage = pages[currentPageIndex];
 
-                // 1. Prepare the new page (set display and initial rotation)
+                // 1. Prepare the new page
                 newPage.classList.add('active', 'next-page'); 
                 newPage.style.display = 'flex'; 
-                newPage.offsetWidth; // Force reflow (CRITICAL for flip)
+                newPage.offsetWidth; 
 
                 // 2. Start the transition
-                oldPage.classList.add('flipping-right'); // Old page flips away
-                newPage.classList.remove('next-page'); // New page rotates into view
+                oldPage.classList.add('flipping-right'); 
+                newPage.classList.remove('next-page'); 
 
-                // 3. Clean up after the flip
+                // 3. Clean up
                 setTimeout(() => {
                     oldPage.classList.remove('active', 'flipping-right');
                     oldPage.style.display = 'none';
                     isFlipping = false;
-                    showIndicators();
                 }, flipDuration);
             }
         }
@@ -315,27 +291,29 @@
                 currentPageIndex--;
                 const newPage = pages[currentPageIndex];
                 
-                // 1. Prepare the new page (set display and initial rotation)
+                // 1. Prepare the new page
                 newPage.classList.add('active', 'prev-page');
                 newPage.style.display = 'flex';
-                newPage.offsetWidth; // Force reflow (CRITICAL for flip)
+                newPage.offsetWidth; 
 
                 // 2. Start the transition
-                oldPage.classList.add('flipping-left'); // Old page flips away
-                newPage.classList.remove('prev-page'); // New page rotates into view
+                oldPage.classList.add('flipping-left'); 
+                newPage.classList.remove('prev-page'); 
 
-                // 3. Clean up after the flip
+                // 3. Clean up
                 setTimeout(() => {
                     oldPage.classList.remove('active', 'flipping-left');
                     oldPage.style.display = 'none';
                     isFlipping = false;
-                    showIndicators();
+
+                    if (currentPageIndex === 0) {
+                        showIndicators();
+                    }
                 }, flipDuration);
             }
         }
         
         // --- Input Handlers ---
-
         comicBook.addEventListener('touchstart', e => {
             if (isFlipping) return;
             touchstartX = e.changedTouches[0].screenX;
@@ -366,23 +344,19 @@
 
         function handleTap(e) {
             if (isFlipping) return;
-            // Use clientX for desktop mouse click, touch for mobile
             const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
             if (clientX === null) return;
             
             const containerRect = comicBook.getBoundingClientRect();
             const clickXRelative = clientX - containerRect.left;
             const center = containerRect.width / 2;
-            const margin = containerRect.width * 0.20; // Define smaller center tap area (20% from center)
+            const margin = containerRect.width * 0.20; 
 
             if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) {
-                // Right side tap (Go Next)
                 nextPage();
             } else if (clickXRelative < center - margin && currentPageIndex > 0) {
-                // Left side tap (Go Previous)
                 prevPage();
-            } else {
-                // Center tap (Show Indicators)
+            } else if (currentPageIndex === 0) {
                 showIndicators(); 
             }
         }
