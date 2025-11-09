@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Reader Comic</title>
+    <title>E-Reader Comic: 10 Pages</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <style>
         body {
@@ -77,25 +77,26 @@
             color: #333;
             font-family: serif; /* More readable font for body text */
             font-size: 1.1em;
+            margin: 5px 0;
         }
-
+        
         /* Navigation Buttons - Opaque and Overlaid */
         .nav-button {
             position: absolute;
-            top: 0; /* Align to the top of the container */
-            height: 100%; /* Full height to cover the side of the page */
-            width: 25%; /* Take up a quarter of the page width */
-            background-color: rgba(0, 0, 0, 0); /* Invisible background */
+            top: 0; 
+            height: 100%; 
+            width: 25%; 
+            background-color: rgba(0, 0, 0, 0); 
             color: white;
             border: none;
             cursor: pointer;
             z-index: 20;
-            font-size: 0; /* Hide the text for a clean look */
+            font-size: 0; 
             transition: background-color 0.1s;
         }
 
         .nav-button:hover:not(:disabled) {
-            background-color: rgba(0, 0, 0, 0.1); /* Subtle hover effect */
+            background-color: rgba(0, 0, 0, 0.1); 
         }
         
         .nav-button:disabled {
@@ -110,16 +111,16 @@
             right: 0;
         }
         
-        /* Optional: Add visible icons/indicators if desired */
+        /* Visible indicators for navigation */
         .nav-button::after {
             content: attr(data-icon);
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             font-size: 2em;
-            color: #4a4a4a; /* Darker color for sepia mode look */
-            opacity: 0.3; /* Subtle indicator */
-            pointer-events: none; /* Important to allow click on button */
+            color: #4a4a4a; 
+            opacity: 0.3; 
+            pointer-events: none; 
             font-family: sans-serif;
         }
         
@@ -130,6 +131,12 @@
         #next-button::after {
             right: 5px;
         }
+        
+        /* Specific content styling for placeholders */
+        .icon-placeholder {
+            font-size: 3em;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -137,28 +144,91 @@
     <div class="comic-container">
         <div class="comic-page active" data-page="1">
             <div class="page-content">
-                <h3>PAGE 1</h3>
-                <p>Welcome to the E-Comic Reader. Tap the right side to advance!</p>
-                <p style="font-size: 3em;">🖼️</p>
-                <p>This is where your single portrait image would be.</p>
+                <h3>PAGE 1: THE BEGINNING</h3>
+                <p>Welcome, reader! Tap the right edge to start your 10-page adventure.</p>
+                <p class="icon-placeholder">🌟</p>
+                <p>Our hero's journey is about to unfold...</p>
             </div>
         </div>
 
         <div class="comic-page" data-page="2">
             <div class="page-content">
-                <h3>PAGE 2</h3>
-                <p>The story continues... Focus on one main image at a time for a better experience.</p>
-                <p style="font-size: 3em;">📖</p>
-                <p>The navigation buttons are now transparent and cover the left/right edges.</p>
+                <h3>PAGE 2: THE CALL</h3>
+                <p>A whisper in the darkness. A clue to a mystery.</p>
+                <p class="icon-placeholder">📞</p>
+                <p>The time for action is now.</p>
             </div>
         </div>
         
         <div class="comic-page" data-page="3">
             <div class="page-content">
-                <h3>PAGE 3</h3>
-                <p>The End (for now)! Tap the left side to go back.</p>
-                <p style="font-size: 3em;">🔚</p>
-                <p>Enjoy your reading!</p>
+                <h3>PAGE 3: A NEW ALLY</h3>
+                <p>KAPOW! A surprising friend steps out of the shadows.</p>
+                <p class="icon-placeholder">🤝</p>
+                <p>They must work together to succeed.</p>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="4">
+            <div class="page-content">
+                <h3>PAGE 4: THE OBSTACLE</h3>
+                <p>A massive roadblock appears in their path!</p>
+                <p class="icon-placeholder">🚧</p>
+                <p>This challenge requires clever thinking.</p>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="5">
+            <div class="page-content">
+                <h3>PAGE 5: TURNING POINT</h3>
+                <p>Halfway there! A difficult decision must be made.</p>
+                <p class="icon-placeholder">🧭</p>
+                <p>The fate of the mission hangs in the balance.</p>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="6">
+            <div class="page-content">
+                <h3>PAGE 6: THE CHASE</h3>
+                <p>VROOM! A high-speed pursuit through the city streets!</p>
+                <p class="icon-placeholder">🏎️</p>
+                <p>They can't afford to slow down now.</p>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="7">
+            <div class="page-content">
+                <h3>PAGE 7: THE SECRET REVEALED</h3>
+                <p>The mask comes off! The true enemy is finally known.</p>
+                <p class="icon-placeholder">🎭</p>
+                <p>A twist no one saw coming!</p>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="8">
+            <div class="page-content">
+                <h3>PAGE 8: PREPARATIONS</h3>
+                <p>The final stand is imminent. Gear up!</p>
+                <p class="icon-placeholder">🛡️</p>
+                <p>One last chance to train and strategize.</p>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="9">
+            <div class="page-content">
+                <h3>PAGE 9: THE CLIMAX</h3>
+                <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
+                <p class="icon-placeholder">💥</p>
+                <p>The tension is unbearable!</p>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="10">
+            <div class="page-content">
+                <h3>PAGE 10: VICTORY & CONCLUSION</h3>
+                <p>The dust settles. The world is safe.</p>
+                <p class="icon-placeholder">✅</p>
+                <p>Thanks for reading! To be continued...</p>
             </div>
         </div>
 
@@ -173,12 +243,15 @@
         let currentPageIndex = 0;
 
         function updatePageDisplay() {
-            pages.forEach((page, index) => {
+            // Hide all pages
+            pages.forEach(page => {
                 page.classList.remove('active');
-                if (index === currentPageIndex) {
-                    page.classList.add('active');
-                }
             });
+            
+            // Show the current page
+            if (pages[currentPageIndex]) {
+                pages[currentPageIndex].classList.add('active');
+            }
 
             // Update button states
             prevButton.disabled = currentPageIndex === 0;
