@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday Jaanu:)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* --- General Body & Container Styling (E-Reader Look) --- */
         body {
@@ -84,12 +84,12 @@
             background-color: #fffaf0; 
             opacity: 0.8; 
             z-index: 5; 
-            transition: filter 0.6s ease-in-out; /* Smooth transition for blur */
+            transition: filter 0.6s ease-in-out; 
         }
 
         /* NEW: Blur effect for specific pages, like the last one */
         .page-content-background.blurred {
-            filter: blur(5px); /* Adjust blur strength as needed */
+            filter: blur(5px); 
         }
 
         .page-content {
@@ -117,7 +117,7 @@
             width: 100%; 
         }
         
-        /* --- Transparent Font with White Border (MODIFIED MARGINS) --- */
+        /* --- Transparent Font with White Border (Standard Comic Style) --- */
         .page-content h3 { 
             margin-top: 0; 
             margin-bottom: 0; 
@@ -151,25 +151,35 @@
             background-color: transparent !important; 
         }
 
-        /* NEW: Calligraphy style for the last page */
+        /* NEW: Scrollable content for the long last page text */
+        .last-page-scroll {
+            height: 100%; /* Take up max available space */
+            overflow-y: auto; /* Enable vertical scroll */
+            padding-top: 10px; /* Space between title and text */
+            padding-bottom: 10px; /* Space above the icon/footer */
+            box-sizing: border-box;
+        }
+
+        /* Revert .last-page-text elements to standard font styling */
         .last-page-text h3 {
-            font-family: 'Great Vibes', cursive; /* Apply calligraphy font */
-            font-size: 2.8em; /* Adjust size for calligraphy */
-            -webkit-text-stroke: 1.5px #fff; /* Thicker stroke for elegance */
-            text-stroke: 1.5px #fff;
+            font-family: 'Bangers', cursive;
+            font-size: 2.2em;
+            -webkit-text-stroke: 1px white;
+            text-stroke: 1px white;
             color: transparent;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Subtle shadow for depth */
+            text-shadow: none;
             line-height: 1.2;
             margin-bottom: 10px;
         }
         .last-page-text p {
-            font-family: 'Great Vibes', cursive; /* Apply calligraphy font */
-            font-size: 1.6em; /* Adjust size */
-            -webkit-text-stroke: 1px #fff; /* Thicker stroke */
-            text-stroke: 1px #fff;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.1em;
+            -webkit-text-stroke: 0.5px white;
+            text-stroke: 0.5px white;
             color: transparent;
-            line-height: 1.3;
+            line-height: 1.4;
             margin: 8px 0;
+            text-align: justify; /* Justify text for long blocks */
         }
 
 
@@ -203,7 +213,8 @@
                     <p class="icon-placeholder">❤️</p>
                 </div>
                 
-                </div>
+                
+</div>
         </div>
 
         <div class="comic-page" data-page="2">
@@ -211,12 +222,12 @@
             <div class="page-content">
                 <div class="page-text-container">
                     <h3>The awkward hand shake</h3>
-                   
+                    
                 </div>
                 
                 <div class="page-text-container">
                     <p class="icon-placeholder">💕</p>
-                     <p>The day I made you feel soo awkward with my edditanam. </p>
+                    <p>The day I made you feel soo awkward with my edditanam. </p>
                 </div>
             </div>
         </div>
@@ -258,7 +269,7 @@
                     <p>Even though it is hyd i felt home sick of not having you by my side😢.</p>
                 </div>
                 
-               
+                
             </div>
         </div>
 
@@ -281,13 +292,18 @@
             <div class="page-content-background" style="background-image: url('8.png');"></div>
             <div class="page-content">
                 <div class="page-text-container last-page-text">
-                    <h3>A Journey of Love, Laughter, and Life</h3>
-                    <p>Happy Birthday jaanu,
-You know what I say.... You deserve everything in this world❤. Entha random ga kalisamo...I got you when I needed you the most. You are that best friend I always wished for. If ppl call me kind, sensible and a good person those credits will be definitely given to you. You don't know how much impact you created on me. Hyd vachina starting lo entha feel aipoyedanno... Entha low lo unna naaku unna only person nuvve... Nuvvu lekapoyunte ah time lo I would be zero till now... You made me so strong. Naa life lo evaru nannu vadilestaru anna bhayam undadu naku... Nannu nenu evvariki prove cheyyakkarledu... Nenu ento cheppukovakkarledu.... Nannu evaro judge chestaru ani feel avvakkarledu....endukante I have you in my life... 
-After seeing so many in my life I got to know that how lucky I am to have you in my life which I already know since starting le😁.
-Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani IIT ki vellina nee lanti frnd dorakakapothe ah IIT kuda waste ae ga... I got you there... You are the only best thing that happened to me in my clg life and till now I feel so proud of having you as my bsf.... You are more like a sister to me.... I always love you.... Okkate bhayam now.... Nee valla naa standards anni soo high🥲. Idk if I can get a person who loves me more than you love me. I love you so much Happy Birthday ❤❤❤</p>
+                    <h3>A JOURNEY OF LOVE, LAUGHTER, AND LIFE</h3>
                 </div>
                 
+                <div class="last-page-scroll">
+                    <div class="page-text-container last-page-text">
+                        <p>Happy Birthday jaanu,
+You know what I say.... You deserve everything in this world❤. Entha random ga kalisamo...I got you when I needed you the most. You are that best friend I always wished for. If ppl call me kind, sensible and a good person those credits will be definitely given to you. You don't know how much impact you created on me. Hyd vachina starting lo entha feel aipoyedanno... Entha low lo unna naaku unna only person nuvve... Nuvvu lekapoyunte ah time lo I would be zero till now... You made me so strong. Naa life lo evaru nannu vadilestaru anna bhayam undadu naku... Nannu nenu evvariki prove cheyyakkarledu... Nenu ento cheppukovakkarledu.... Nannu evaro judge chestaru ani feel avvakkarledu....endukante I have you in my life... 
+After seeing so many in my life I got to know that how lucky I am to have you in my life which I already know since starting le😁.
+Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani IIT ki vellina nee lanti frnd dorakakapothe ah IIT kuda waste ae ga... I got you there... You are the only best thing that happened to me in my clg life and till now I feel so proud of having you as my bsf.... You are more like a sister to me.... I always love you.... Okkate bhayam now.... Nee valla naa standards anni soo high🥲. Idk if I can get a person who loves me more than you love me. I love you so much Happy Birthday ❤❤❤</p>
+                    </div>
+                </div>
+
                 <div class="page-text-container last-page-text">
                     <p class="icon-placeholder">💖</p>
                     <p>With all my love. HBD Jaanu</p>
