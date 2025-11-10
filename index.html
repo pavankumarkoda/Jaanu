@@ -41,8 +41,8 @@
             position: absolute;
             top: 15px;
             left: 15px;
-            width: calc(100% - 30px); 
-            height: calc(100% - 30px);
+            width: calc(100% - 30px); /* Adjusted to fit inside padding */
+            height: calc(100% - 30px); /* Adjusted to fit inside padding */
             display: none; 
             box-sizing: border-box;
             background-color: transparent; 
@@ -143,6 +143,7 @@
             background-color: rgba(0, 0, 0, 0.7); 
             color: white; border-radius: 6px; 
             padding: 5px 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            font-family: sans-serif; /* Ensure indicator text is readable */
         }
 
         .swipe-indicator.show { opacity: 0.9; font-size: 3em; }
@@ -169,6 +170,8 @@
             color: #fff;
             text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
             margin-bottom: 20px;
+            -webkit-text-stroke: 0; /* Clear text-stroke for final page */
+            text-stroke: 0;
         }
 
         .comic-page[data-page="10"] p {
@@ -178,6 +181,9 @@
             line-height: 1.6;
             margin: 10px 0;
             text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+            -webkit-text-stroke: 0; /* Clear text-stroke for final page */
+            text-stroke: 0;
+            background-color: transparent !important;
         }
 
         .comic-page[data-page="10"] .icon-placeholder {
@@ -194,142 +200,138 @@
 </head>
 <body>
 
-  <div class="comic-book">
-    <!-- Page 1 -->
-    <div class="comic-page" data-page="1">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=1');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 1</div>
-        <div class="page-text-container">
-          <h3>The Beginning</h3>
-          <p>Every story starts with a spark — an idea that lights the path ahead.</p>
+    <div class="comic-container" id="comic-book"> 
+        
+        <div class="comic-page active" data-page="1">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=1');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 1</div>
+                <div class="page-text-container">
+                    <h3>The Beginning</h3>
+                    <p>Every story starts with a spark — an idea that lights the path ahead.</p>
+                </div>
+                <div class="icon-placeholder">🌅</div>
+            </div>
         </div>
-        <div class="icon-placeholder">🌅</div>
-      </div>
-    </div>
 
-    <!-- Page 2 -->
-    <div class="comic-page" data-page="2">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=2');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 2</div>
-        <div class="page-text-container">
-          <h3>First Steps</h3>
-          <p>With courage and hope, the first step begins — though the path is unknown.</p>
+        <div class="comic-page" data-page="2">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=2');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 2</div>
+                <div class="page-text-container">
+                    <h3>First Steps</h3>
+                    <p>With courage and hope, the first step begins — though the path is unknown.</p>
+                </div>
+                <div class="icon-placeholder">🚶‍♂️</div>
+            </div>
         </div>
-        <div class="icon-placeholder">🚶‍♂️</div>
-      </div>
-    </div>
 
-    <!-- Page 3 -->
-    <div class="comic-page" data-page="3">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=3');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 3</div>
-        <div class="page-text-container">
-          <h3>Challenges Arise</h3>
-          <p>Every journey brings storms — testing strength and purpose.</p>
+        <div class="comic-page" data-page="3">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=3');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 3</div>
+                <div class="page-text-container">
+                    <h3>Challenges Arise</h3>
+                    <p>Every journey brings storms — testing strength and purpose.</p>
+                </div>
+                <div class="icon-placeholder">⚡</div>
+            </div>
         </div>
-        <div class="icon-placeholder">⚡</div>
-      </div>
-    </div>
 
-    <!-- Page 4 -->
-    <div class="comic-page" data-page="4">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=4');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 4</div>
-        <div class="page-text-container">
-          <h3>Allies</h3>
-          <p>Even heroes need companions — strength grows in unity.</p>
+        <div class="comic-page" data-page="4">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=4');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 4</div>
+                <div class="page-text-container">
+                    <h3>Allies</h3>
+                    <p>Even heroes need companions — strength grows in unity.</p>
+                </div>
+                <div class="icon-placeholder">🤝</div>
+            </div>
         </div>
-        <div class="icon-placeholder">🤝</div>
-      </div>
-    </div>
 
-    <!-- Page 5 -->
-    <div class="comic-page" data-page="5">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=5');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 5</div>
-        <div class="page-text-container">
-          <h3>The Quest Deepens</h3>
-          <p>Hidden truths begin to unfold — every clue leads closer to destiny.</p>
+        <div class="comic-page" data-page="5">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=5');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 5</div>
+                <div class="page-text-container">
+                    <h3>The Quest Deepens</h3>
+                    <p>Hidden truths begin to unfold — every clue leads closer to destiny.</p>
+                </div>
+                <div class="icon-placeholder">🗺️</div>
+            </div>
         </div>
-        <div class="icon-placeholder">🗺️</div>
-      </div>
-    </div>
 
-    <!-- Page 6 -->
-    <div class="comic-page" data-page="6">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=6');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 6</div>
-        <div class="page-text-container">
-          <h3>Falling & Rising</h3>
-          <p>Defeat teaches more than victory — resilience builds heroes.</p>
+        <div class="comic-page" data-page="6">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=6');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 6</div>
+                <div class="page-text-container">
+                    <h3>Falling & Rising</h3>
+                    <p>Defeat teaches more than victory — resilience builds heroes.</p>
+                </div>
+                <div class="icon-placeholder">🔥</div>
+            </div>
         </div>
-        <div class="icon-placeholder">🔥</div>
-      </div>
-    </div>
 
-    <!-- Page 7 -->
-    <div class="comic-page" data-page="7">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=7');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 7</div>
-        <div class="page-text-container">
-          <h3>The Turning Point</h3>
-          <p>A realization dawns — the power was within all along.</p>
+        <div class="comic-page" data-page="7">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=7');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 7</div>
+                <div class="page-text-container">
+                    <h3>The Turning Point</h3>
+                    <p>A realization dawns — the power was within all along.</p>
+                </div>
+                <div class="icon-placeholder">💡</div>
+            </div>
         </div>
-        <div class="icon-placeholder">💡</div>
-      </div>
-    </div>
 
-    <!-- Page 8 -->
-    <div class="comic-page" data-page="8">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=8');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 8</div>
-        <div class="page-text-container">
-          <h3>Final Battle</h3>
-          <p>Everything leads to this moment — courage meets fate head-on.</p>
+        <div class="comic-page" data-page="8">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=8');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 8</div>
+                <div class="page-text-container">
+                    <h3>Final Battle</h3>
+                    <p>Everything leads to this moment — courage meets fate head-on.</p>
+                </div>
+                <div class="icon-placeholder">⚔️</div>
+            </div>
         </div>
-        <div class="icon-placeholder">⚔️</div>
-      </div>
-    </div>
 
-    <!-- Page 9 -->
-    <div class="comic-page" data-page="9">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=9');"></div>
-      <div class="page-content">
-        <div class="page-number">Page 9</div>
-        <div class="page-text-container">
-          <h3>Peace Returns</h3>
-          <p>Silence fills the air — not of loss, but of calm victory.</p>
+        <div class="comic-page" data-page="9">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=9');"></div>
+            <div class="page-content">
+                <div class="page-number">Page 9</div>
+                <div class="page-text-container">
+                    <h3>Peace Returns</h3>
+                    <p>Silence fills the air — not of loss, but of calm victory.</p>
+                </div>
+                <div class="icon-placeholder">🌙</div>
+            </div>
         </div>
-        <div class="icon-placeholder">🌙</div>
-      </div>
-    </div>
 
-    <!-- Page 10 - Final Special Page -->
-    <div class="comic-page" data-page="10">
-      <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=10');"></div>
-      <div class="page-content">
-        <div class="page-text-container">
-          <h3>THE END — BUT NEVER REALLY</h3>
-          <p>As the final page turns, our story may pause...<br>
-             but the laughter, the memories, and the love — live forever.<br>
-             Until our next adventure together. 💫</p>
-          <p class="icon-placeholder">❤️</p>
+        <div class="comic-page" data-page="10">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=10');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>THE END — BUT NEVER REALLY</h3>
+                    <p>As the final page turns, our story may pause...<br>
+                        but the laughter, the memories, and the love — live forever.<br>
+                        Until our next adventure together. 💫</p>
+                    <p class="icon-placeholder">❤️</p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    
+    <div class="swipe-indicator" id="left-indicator">◀️ Swipe Left</div>
+    <div class="swipe-indicator" id="right-indicator">Swipe Right ▶️</div>
 
     <script>
         const pages = document.querySelectorAll('.comic-page');
+        // Corrected selector to match the new ID
         const comicBook = document.getElementById('comic-book');
+        // Added selectors for the indicators
         const leftIndicator = document.getElementById('left-indicator');
         const rightIndicator = document.getElementById('right-indicator');
         let currentPageIndex = 0;
@@ -340,11 +342,19 @@
         const swipeThreshold = 50; 
 
         function showIndicators() {
+            if (!leftIndicator || !rightIndicator) return;
+            
             leftIndicator.classList.remove('show');
             rightIndicator.classList.remove('show');
+            
             if (currentPageIndex === 0) {
+                // Show right indicator on the first page
                 rightIndicator.classList.add('show');
                 setTimeout(() => { rightIndicator.classList.remove('show'); }, 3000);
+            } else if (currentPageIndex === pages.length - 1) {
+                // Show left indicator on the last page
+                leftIndicator.classList.add('show');
+                setTimeout(() => { leftIndicator.classList.remove('show'); }, 3000);
             }
         }
 
@@ -354,15 +364,24 @@
                 const oldPage = pages[currentPageIndex];
                 currentPageIndex++;
                 const newPage = pages[currentPageIndex];
+                
+                // Prepare the new page to be flipped
                 newPage.classList.add('active', 'next-page'); 
                 newPage.style.display = 'flex';
-                newPage.offsetWidth;
+                newPage.offsetWidth; // Force reflow to register 'prev-page' class immediately
+                
+                // Start the flip animation on the old page
                 oldPage.classList.add('flipping-right');
+                
+                // Remove the setup class immediately after reflow
                 newPage.classList.remove('next-page');
+                
                 setTimeout(() => {
+                    // Cleanup classes after the animation finishes
                     oldPage.classList.remove('active', 'flipping-right');
                     oldPage.style.display = 'none';
                     isFlipping = false;
+                    showIndicators();
                 }, flipDuration);
             }
         }
@@ -373,16 +392,24 @@
                 const oldPage = pages[currentPageIndex];
                 currentPageIndex--;
                 const newPage = pages[currentPageIndex];
+                
+                // Prepare the new page to be flipped
                 newPage.classList.add('active', 'prev-page');
                 newPage.style.display = 'flex';
-                newPage.offsetWidth;
+                newPage.offsetWidth; // Force reflow
+                
+                // Start the flip animation on the old page
                 oldPage.classList.add('flipping-left');
+                
+                // Remove the setup class immediately after reflow
                 newPage.classList.remove('prev-page');
+                
                 setTimeout(() => {
+                    // Cleanup classes after the animation finishes
                     oldPage.classList.remove('active', 'flipping-left');
                     oldPage.style.display = 'none';
                     isFlipping = false;
-                    if (currentPageIndex === 0) showIndicators();
+                    showIndicators();
                 }, flipDuration);
             }
         }
@@ -404,7 +431,9 @@
                 handleTap(e);
                 return;
             }
+            // Positive deltaX means swiping right (prev page)
             if (deltaX > 0) prevPage();
+            // Negative deltaX means swiping left (next page)
             else nextPage();
             touchstartX = 0; 
             touchendX = 0;
@@ -412,15 +441,24 @@
 
         function handleTap(e) {
             if (isFlipping) return;
+            
+            // Determine the click/tap location
             const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
             if (clientX === null) return;
-            const containerRect = comicBook.getBoundingClientRect();
+            
+            // Use e.currentTarget to get the element that the listener is attached to
+            const containerRect = e.currentTarget.getBoundingClientRect();
             const clickXRelative = clientX - containerRect.left;
+            
             const center = containerRect.width / 2;
             const margin = containerRect.width * 0.20; 
+            
+            // Click/Tap on the right side of the book (outside the central margin)
             if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) nextPage();
+            // Click/Tap on the left side of the book (outside the central margin)
             else if (clickXRelative < center - margin && currentPageIndex > 0) prevPage();
-            else if (currentPageIndex === 0) showIndicators(); 
+            // Click/Tap in the center (show indicators)
+            else showIndicators(); 
         }
 
         comicBook.addEventListener('click', handleTap, false);
@@ -431,9 +469,14 @@
             else if (e.key === 'ArrowLeft') prevPage();
         });
 
+        // Initialize: Ensure only the first page is visible and active on load
         pages.forEach((page, index) => {
-            if (index !== 0) page.style.display = 'none';
+            page.style.display = index === 0 ? 'flex' : 'none';
+            if (index === 0) page.classList.add('active');
+            else page.classList.remove('active');
         });
+        
+        // Initial call to show indicators
         showIndicators();
     </script>
 </body>
