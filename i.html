@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doodle Comic Reader (Image Backgrounds)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Body & Container Styling (E-Reader Look) --- */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; 
+            font-family: 'Roboto', sans-serif;
+            perspective: 1800px;
+            user-select: none;
+        }
+
+        .comic-container {
+            position: relative;
+            width: 90%; 
+            max-width: 450px; 
+            height: 90vh;
+            max-height: 700px;
+            
+            border-radius: 12px; 
+            background-color: #966f33; 
+            
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            
+            overflow: visible; 
+            cursor: pointer; 
+            padding: 15px; 
+            box-sizing: border-box;
+        }
+        
+        /* -------------------------------------- */
+        /* Core Page-Flip CSS (Unchanged) */
+        /* -------------------------------------- */
+        .comic-page {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: calc(100% - 30px); 
+            height: calc(100% - 30px);
+            display: none; 
+            box-sizing: border-box;
+            background-color: transparent; 
+            border-radius: 8px; 
+            
+            transform-origin: left center;
+            transform: rotateY(0deg); 
+            transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
+            backface-visibility: hidden;
+            z-index: 1; 
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+        }
+
+        .comic-page.active {
+            display: flex;
+            transform: rotateY(0deg); 
+            z-index: 2; 
+        }
+
+        .comic-page.flipping-right { transform-origin: left bottom; transform: rotateY(-180deg); z-index: 10; }
+        .comic-page.active.next-page { transform-origin: left bottom; transform: rotateY(180deg); }
+        .comic-page.flipping-left { transform-origin: right bottom; transform: rotateY(180deg); z-index: 10; }
+        .comic-page.active.prev-page { transform-origin: right bottom; transform: rotateY(-180deg); }
+
+        /* -------------------------------------- */
+        /* Background Image & Content Styling (MODIFIED) */
+        /* -------------------------------------- */
+        
+        .page-content-background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 6px; 
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover; 
+            background-color: #fffaf0; 
+            opacity: 0.8; 
+            z-index: 5; 
+            transition: filter 0.6s ease-in-out; /* Smooth transition for blur */
+        }
+
+        /* NEW: Blur effect for specific pages, like the last one */
+        .page-content-background.blurred {
+            filter: blur(5px); /* Adjust blur strength as needed */
+        }
+
+        .page-content {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex; 
+            flex-direction: column;
+            justify-content: space-between; 
+            
+            padding: 10% 25px; 
+            box-sizing: border-box;
+            
+            border: 1px solid #333; 
+            border-radius: 6px; 
+            background-color: transparent; 
+            z-index: 10; 
+        }
+        
+        /* NEW: Container to group and center text blocks horizontally */
+        .page-text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%; 
+        }
+        
+        /* --- Transparent Font with White Border (MODIFIED MARGINS) --- */
+        .page-content h3 { 
+            margin-top: 0; 
+            margin-bottom: 0; 
+            color: transparent; 
+            -webkit-text-stroke: 1px white; 
+            text-stroke: 1px white; 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.2em; 
+            text-shadow: none; 
+        }
+        
+        .page-content p { 
+            color: transparent; 
+            -webkit-text-stroke: 0.5px white; 
+            text-stroke: 0.5px white;
+            font-family: 'Roboto', sans-serif; 
+            font-size: 1.1em; 
+            line-height: 1.4; 
+            margin: 5px 0; 
+            background-color: transparent; 
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .icon-placeholder { 
+            font-size: 4em; 
+            margin: 15px 0; 
+            color: #cc4444; 
+            -webkit-text-stroke: 0; 
+            text-stroke: 0;
+            background-color: transparent !important; 
+        }
+
+        /* NEW: Calligraphy style for the last page */
+        .last-page-text h3 {
+            font-family: 'Great Vibes', cursive; /* Apply calligraphy font */
+            font-size: 2.8em; /* Adjust size for calligraphy */
+            -webkit-text-stroke: 1.5px #fff; /* Thicker stroke for elegance */
+            text-stroke: 1.5px #fff;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Subtle shadow for depth */
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+        .last-page-text p {
+            font-family: 'Great Vibes', cursive; /* Apply calligraphy font */
+            font-size: 1.6em; /* Adjust size */
+            -webkit-text-stroke: 1px #fff; /* Thicker stroke */
+            text-stroke: 1px #fff;
+            color: transparent;
+            line-height: 1.3;
+            margin: 8px 0;
+        }
+
+
+        /* Indicator Styling (unchanged) */
+        .swipe-indicator {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out;
+            z-index: 30; pointer-events: none;
+            background-color: rgba(0, 0, 0, 0.7); 
+            color: white; border-radius: 6px; 
+            padding: 5px 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .swipe-indicator.show { opacity: 0.9; font-size: 3em; }
+        #left-indicator { left: 25px; } 
+        #right-indicator { right: 25px; }
+    </style>
+</head>
+<body>
+
+    <div class="comic-container" id="comic-book">
+        <span id="left-indicator" class="swipe-indicator">👈</span>
+        <span id="right-indicator" class="swipe-indicator">👉</span>
+
+        <div class="comic-page active" data-page="1">
+            <div class="page-content-background" style="background-image: url('unnamed.jpg?random=1');"></div>
+            <div class="page-content">
+                
+                <div class="page-text-container">
+                    <h3>HAPPY BIRTHDAY JAANUUU</h3>
+                    <p class="icon-placeholder">❤️</p>
+                </div>
+                
+                </div>
+        </div>
+
+        <div class="comic-page" data-page="2">
+            <div class="page-content-background" style="background-image: url('');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>The awkward hand shake</h3>
+                    <p>The day I made you feel soo awkward with my edditanam. </p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">💕</p>
+                    <p>The time for action is now.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="3">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=3');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 3: A NEW ALLY</h3>
+                    <p>KAPOW! A surprising friend steps out of the shadows.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🤝</p>
+                    <p>They must work together to succeed.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="4">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=4');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 4: THE OBSTACLE</h3>
+                    <p>A massive roadblock appears in their path!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🚧</p>
+                    <p>This challenge requires clever thinking.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="5">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=5');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 5: TURNING POINT</h3>
+                    <p>Halfway there! A difficult decision must be made.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🧭</p>
+                    <p>The fate of the mission hangs in the balance.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="6">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=6');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 6: THE CHASE</h3>
+                    <p>VROOM! A high-speed pursuit through the city streets!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🏎️</p>
+                    <p>They can't afford to slow down now.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="7">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=7');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 7: THE SECRET REVEALED</h3>
+                    <p>The mask comes off! The true enemy is finally known.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🎭</p>
+                    <p>A twist no one saw coming!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="8">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=8');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 8: PREPARATIONS</h3>
+                    <p>The final stand is imminent. Gear up!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🛡️</p>
+                    <p>One last chance to train and strategize.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="9">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=9');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 9: THE CLIMAX</h3>
+                    <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">💥</p>
+                    <p>The tension is unbearable!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="comic-page" data-page="10">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=10');"></div>
+            <div class="page-content">
+                <div class="page-text-container last-page-text">
+                    <h3>A Journey of Love, Laughter, and Life</h3>
+                    <p>From the first awkward handshake to countless shared moments, every memory with you is a treasure. Thank you for being the incredible person you are. Here's to many more adventures, smiles, and a future filled with even more love.</p>
+                </div>
+                
+                <div class="page-text-container last-page-text">
+                    <p class="icon-placeholder">💖</p>
+                    <p>With all my love, always.</p>
+                    <p>Tap or swipe right to restart!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pages = document.querySelectorAll('.comic-page');
+        const comicBook = document.getElementById('comic-book');
+        const leftIndicator = document.getElementById('left-indicator');
+        const rightIndicator = document.getElementById('right-indicator');
+        let currentPageIndex = 0;
+        const flipDuration = 600; 
+        let isFlipping = false;
+
+        // Variables for Swipe Detection
+        let touchstartX = 0;
+        let touchendX = 0;
+        const swipeThreshold = 50; 
+
+        // --- Indicator Logic ---
+        function showIndicators() {
+            leftIndicator.classList.remove('show');
+            rightIndicator.classList.remove('show');
+
+            if (currentPageIndex === 0) {
+                rightIndicator.classList.add('show');
+
+                setTimeout(() => {
+                    rightIndicator.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        // --- Page Navigation Logic (modified to handle blur) ---
+        function nextPage() {
+            if (currentPageIndex < pages.length - 1 && !isFlipping) {
+                isFlipping = true;
+                const oldPage = pages[currentPageIndex];
+                currentPageIndex++;
+                const newPage = pages[currentPageIndex];
+
+                // Apply blur to the background of the new page if it's the last page
+                if (currentPageIndex === pages.length -1) {
+                    newPage.querySelector('.page-content-background').classList.add('blurred');
+                } else {
+                    newPage.querySelector('.page-content-background').classList.remove('blurred');
+                }
+
+                oldPage.querySelector('.page-content-background').classList.remove('blurred'); // Ensure previous page is not blurred
+
+                newPage.classList.add('active', 'next-page'); 
+                newPage.style.display = 'flex'; 
+                newPage.offsetWidth; 
+
+                oldPage.classList.add('flipping-right'); 
+                newPage.classList.remove('next-page'); 
+
+                setTimeout(() => {
+                    oldPage.classList.remove('active', 'flipping-right');
+                    oldPage.style.display = 'none';
+                    isFlipping = false;
+                }, flipDuration);
+            }
+        }
+
+        function prevPage() {
+            if (currentPageIndex > 0 && !isFlipping) {
+                isFlipping = true;
+                const oldPage = pages[currentPageIndex];
+                currentPageIndex--;
+                const newPage = pages[currentPageIndex];
+                
+                // Remove blur from the background of the previous page if it was the last page
+                if (oldPage.querySelector('.page-content-background').classList.contains('blurred')) {
+                    oldPage.querySelector('.page-content-background').classList.remove('blurred');
+                }
+
+                newPage.classList.add('active', 'prev-page');
+                newPage.style.display = 'flex';
+                newPage.offsetWidth; 
+
+                oldPage.classList.add('flipping-left'); 
+                newPage.classList.remove('prev-page'); 
+
+                setTimeout(() => {
+                    oldPage.classList.remove('active', 'flipping-left');
+                    oldPage.style.display = 'none';
+                    isFlipping = false;
+
+                    if (currentPageIndex === 0) {
+                        showIndicators();
+                    }
+                }, flipDuration);
+            }
+        }
+        
+        // --- Input Handlers (unchanged) ---
+        comicBook.addEventListener('touchstart', e => {
+            if (isFlipping) return;
+            touchstartX = e.changedTouches[0].screenX;
+        }, false);
+
+        comicBook.addEventListener('touchend', e => {
+            if (isFlipping) return;
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture(e);
+        }, false);
+
+        function handleGesture(e) {
+            const deltaX = touchendX - touchstartX;
+
+            if (Math.abs(deltaX) < swipeThreshold) {
+                handleTap(e);
+                return;
+            }
+
+            if (deltaX > 0) {
+                prevPage();
+            } else {
+                nextPage();
+            }
+            touchstartX = 0; 
+            touchendX = 0;
+        }
+
+        function handleTap(e) {
+            if (isFlipping) return;
+            const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
+            if (clientX === null) return;
+            
+            const containerRect = comicBook.getBoundingClientRect();
+            const clickXRelative = clientX - containerRect.left;
+            const center = containerRect.width / 2;
+            const margin = containerRect.width * 0.20; 
+
+            if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) {
+                nextPage();
+            } else if (clickXRelative < center - margin && currentPageIndex > 0) {
+                prevPage();
+            } else if (currentPageIndex === 0) {
+                showIndicators(); 
+            }
+        }
+        
+        comicBook.addEventListener('click', handleTap, false);
+
+        document.addEventListener('keydown', (e) => {
+            if (isFlipping) return;
+            if (e.key === 'ArrowRight') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
+
+        // Initial setup
+        pages.forEach((page, index) => {
+            if (index !== 0) {
+                page.style.display = 'none';
+            }
+        });
+        showIndicators();
+    </script>
+</body>
+</html>
