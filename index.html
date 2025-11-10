@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doodle Comic Reader (Image Backgrounds)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&family=Calligraffitti&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&family=Calligraffitti&display=swap" rel="stylesheet">
     <style>
         /* --- General Body & Container Styling (E-Reader Look) --- */
         body {
@@ -87,7 +87,7 @@
             transition: filter 0.6s ease-in-out; 
         }
 
-        /* New rule for the blur effect */
+        /* 2. CSS FOR BLUR EFFECT */
         .page-content-background.blur-background {
             filter: blur(5px); 
         }
@@ -144,7 +144,7 @@
             border-radius: 3px;
         }
 
-        /* Custom styles for the last page's paragraph (Calligraphy) */
+        /* 3. CSS FOR CALLIGRAPHY FONT AND SIZE */
         .page-content p.calligraphy-font {
             font-family: 'Calligraffitti', cursive; 
             font-size: 1.6em; 
@@ -316,7 +316,7 @@
             </div>
         </div>
 
-        <div class="comic-page" data-page="10">
+                <div class="comic-page" data-page="10">
             <div class="page-content-background **blur-background**" style="background-image: url('https://picsum.photos/400/600?random=10');"></div>
             <div class="page-content">
                 <div class="page-text-container">
@@ -403,3 +403,52 @@
 
                     if (currentPageIndex === 0) {
                         showIndicators();
+                    }
+                }, flipDuration);
+            }
+        }
+        
+        // --- Input Handlers (unchanged) ---
+        comicBook.addEventListener('touchstart', e => {
+            if (isFlipping) return;
+            touchstartX = e.changedTouches[0].screenX;
+        }, false);
+
+        comicBook.addEventListener('touchend', e => {
+            if (isFlipping) return;
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture(e);
+        }, false);
+
+        function handleGesture(e) {
+            const deltaX = touchendX - touchstartX;
+
+            if (Math.abs(deltaX) < swipeThreshold) {
+                handleTap(e);
+                return;
+            }
+
+            if (deltaX > 0) {
+                prevPage();
+            } else {
+                nextPage();
+            }
+            touchstartX = 0; 
+            touchendX = 0;
+        }
+
+        function handleTap(e) {
+            if (isFlipping) return;
+            const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
+            if (clientX === null) return;
+            
+            const containerRect = comicBook.getBoundingClientRect();
+            const clickXRelative = clientX - containerRect.left;
+            const center = containerRect.width / 2;
+            const margin = containerRect.width * 0.20; 
+
+            if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) {
+                nextPage();
+            } else if (clickXRelative < center - margin && currentPageIndex > 0) {
+                prevPage();
+            } else if (currentPageIndex === 0) {
