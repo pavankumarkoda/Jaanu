@@ -13,7 +13,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0; 
+            background-color: #f0f0f0;
             font-family: 'Roboto', sans-serif;
             perspective: 1800px;
             user-select: none;
@@ -21,22 +21,22 @@
 
         .comic-container {
             position: relative;
-            width: 90%; 
-            max-width: 450px; 
+            width: 90%;
+            max-width: 450px;
             height: 90vh;
             max-height: 700px;
-            
-            border-radius: 12px; 
-            background-color: #966f33; 
-            
+
+            border-radius: 12px;
+            background-color: #966f33;
+
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            
-            overflow: visible; 
-            cursor: pointer; 
-            padding: 15px; 
+
+            overflow: visible;
+            cursor: pointer;
+            padding: 15px;
             box-sizing: border-box;
         }
-        
+
         /* -------------------------------------- */
         /* Core Page-Flip CSS (Unchanged) */
         /* -------------------------------------- */
@@ -44,25 +44,25 @@
             position: absolute;
             top: 15px;
             left: 15px;
-            width: calc(100% - 30px); 
+            width: calc(100% - 30px);
             height: calc(100% - 30px);
-            display: none; 
+            display: none;
             box-sizing: border-box;
-            background-color: transparent; 
-            border-radius: 8px; 
-            
+            background-color: transparent;
+            border-radius: 8px;
+
             transform-origin: left center;
-            transform: rotateY(0deg); 
-            transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
+            transform: rotateY(0deg);
+            transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1);
             backface-visibility: hidden;
-            z-index: 1; 
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+            z-index: 1;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .comic-page.active {
             display: flex;
-            transform: rotateY(0deg); 
-            z-index: 2; 
+            transform: rotateY(0deg);
+            z-index: 2;
         }
 
         .comic-page.flipping-right { transform-origin: left bottom; transform: rotateY(-180deg); z-index: 10; }
@@ -73,82 +73,87 @@
         /* -------------------------------------- */
         /* Background Image & Content Styling (MODIFIED) */
         /* -------------------------------------- */
-        
+
         .page-content-background {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 6px; 
+            border-radius: 6px;
             background-position: center center;
             background-repeat: no-repeat;
-            background-size: cover; 
-            background-color: #fffaf0; 
-            opacity: 0.8; 
-            z-index: 5; 
-            transition: filter 0.6s ease-in-out; 
+            background-size: cover;
+            background-color: #fffaf0;
+            opacity: 0.8;
+            z-index: 5;
+            transition: filter 0.6s ease-in-out;
         }
 
         /* NEW: Blur effect for specific pages, like the last one */
         .page-content-background.blurred {
-            filter: blur(5px); 
+            filter: blur(5px);
         }
 
         .page-content {
             position: relative;
             width: 100%; height: 100%;
-            display: flex; 
+            display: flex;
             flex-direction: column;
-            justify-content: space-between; 
-            
-            padding: 10% 25px; 
+            justify-content: space-between;
+
+            padding: 10% 25px;
             box-sizing: border-box;
-            
-            border: 1px solid #333; 
-            border-radius: 6px; 
-            background-color: transparent; 
-            z-index: 10; 
+
+            border: 1px solid #333;
+            border-radius: 6px;
+            background-color: transparent;
+            z-index: 10;
         }
-        
+
         /* NEW: Container to group and center text blocks horizontally */
         .page-text-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            width: 100%; 
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Added semi-transparent background */
+            padding: 8px 15px; /* Added padding */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 10px; /* Space between text blocks */
         }
-        
+
         /* --- Transparent Font with White Border (Standard Comic Style) --- */
-        .page-content h3 { 
-            margin-top: 0; 
-            margin-bottom: 0; 
-            color: transparent; 
-            -webkit-text-stroke: 1px white; 
-            text-stroke: 1px white; 
-            font-family: 'Bangers', cursive; 
-            font-size: 2.2em; 
-            text-shadow: none; 
+        .page-content h3 {
+            margin-top: 0;
+            margin-bottom: 0;
+            color: transparent;
+            -webkit-text-stroke: 1.5px white; /* Increased stroke */
+            text-stroke: 1.5px white; /* Increased stroke */
+            font-family: 'Bangers', cursive;
+            font-size: 2.2em;
+            text-shadow: none;
+            line-height: 1.2;
         }
-        
-        .page-content p { 
-            color: transparent; 
-            -webkit-text-stroke: 0.5px white; 
-            text-stroke: 0.5px white;
-            font-family: 'Roboto', sans-serif; 
-            font-size: 1.1em; 
-            line-height: 1.4; 
-            margin: 5px 0; 
-            background-color: transparent; 
+
+        .page-content p {
+            color: transparent;
+            -webkit-text-stroke: 0.8px white; /* Increased stroke */
+            text-stroke: 0.8px white; /* Increased stroke */
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.1em;
+            line-height: 1.4;
+            margin: 5px 0;
+            background-color: transparent;
             padding: 2px 5px;
             border-radius: 3px;
         }
 
-        .icon-placeholder { 
-            font-size: 4em; 
-            margin: 15px 0; 
-            color: #cc4444; 
-            -webkit-text-stroke: 0; 
+        .icon-placeholder {
+            font-size: 4em;
+            margin: 15px 0;
+            color: #cc4444;
+            -webkit-text-stroke: 0;
             text-stroke: 0;
-            background-color: transparent !important; 
+            background-color: transparent !important;
         }
 
         /* NEW: Scrollable content for the long last page text */
@@ -164,8 +169,8 @@
         .last-page-text h3 {
             font-family: 'Bangers', cursive;
             font-size: 2.2em;
-            -webkit-text-stroke: 1px white;
-            text-stroke: 1px white;
+            -webkit-text-stroke: 1.5px white; /* Increased stroke */
+            text-stroke: 1.5px white; /* Increased stroke */
             color: transparent;
             text-shadow: none;
             line-height: 1.2;
@@ -174,8 +179,8 @@
         .last-page-text p {
             font-family: 'Roboto', sans-serif;
             font-size: 1.1em;
-            -webkit-text-stroke: 0.5px white;
-            text-stroke: 0.5px white;
+            -webkit-text-stroke: 0.8px white; /* Increased stroke */
+            text-stroke: 0.8px white; /* Increased stroke */
             color: transparent;
             line-height: 1.4;
             margin: 8px 0;
@@ -188,13 +193,13 @@
             position: absolute; top: 50%; transform: translateY(-50%);
             font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out;
             z-index: 30; pointer-events: none;
-            background-color: rgba(0, 0, 0, 0.7); 
-            color: white; border-radius: 6px; 
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white; border-radius: 6px;
             padding: 5px 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .swipe-indicator.show { opacity: 0.9; font-size: 3em; }
-        #left-indicator { left: 25px; } 
+        #left-indicator { left: 25px; }
         #right-indicator { right: 25px; }
     </style>
 </head>
@@ -207,13 +212,12 @@
         <div class="comic-page active" data-page="1">
             <div class="page-content-background" style="background-image: url('unnamed.jpg?random=1');"></div>
             <div class="page-content">
-                
+
                 <div class="page-text-container">
                     <h3>HAPPY BIRTHDAY JAANUUU</h3>
                     <p class="icon-placeholder">❤️</p>
                 </div>
-                
-                
+
 </div>
         </div>
 
@@ -222,38 +226,38 @@
             <div class="page-content">
                 <div class="page-text-container">
                     <h3>The awkward hand shake</h3>
-                    
+
                 </div>
-                
+
                 <div class="page-text-container">
                     <p class="icon-placeholder">💕</p>
                     <p>The day I made you feel soo awkward with my edditanam. </p>
                 </div>
             </div>
         </div>
-        
+
         <div class="comic-page" data-page="3">
-            <div class="page-content-background" style="background-image: url('11.jpg');"></div>
+            <div class="page-content-background" style="background-image: url('14.jpg');"></div>
             <div class="page-content">
                 <div class="page-text-container">
                     <h3>Chatting during covid</h3>
                     <p>We should thank covid which made us best friends</p>
                 </div>
-                
+
                 <div class="page-text-container">
                     <p class="icon-placeholder">😁</p>
                     <p>Also may be because of my attendance😜</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="comic-page" data-page="4">
             <div class="page-content-background" style="background-image: url('12.jpg');"></div>
             <div class="page-content">
                 <div class="page-text-container">
                     <h3>The days I missed you the most</h3>
                 </div>
-                
+
                 <div class="page-text-container">
                     <p class="icon-placeholder">📍</p>
                     <p>PUNE-----VJA</p>
@@ -268,8 +272,8 @@
                     <h3>Oct-2k24: Where adulting started</h3>
                     <p>Even though it is hyd i felt home sick of not having you by my side😢.</p>
                 </div>
-                
-                
+
+
             </div>
         </div>
 
@@ -280,7 +284,7 @@
                     <h3>Oct- 2k25: GOKARNAAAAAAA FINALLYYYYY!!!!</h3>
                     <p>Finally! The trip which we wanted so badly.</p>
                 </div>
-                
+
                 <div class="page-text-container">
                     <p class="icon-placeholder">🏎️</p>
                     <p>Planned for Vizag but ended up in Gokarna. </p>
@@ -294,11 +298,11 @@
                 <div class="page-text-container last-page-text">
                     <h3>A JOURNEY OF LOVE, LAUGHTER, AND LIFE</h3>
                 </div>
-                
+
                 <div class="last-page-scroll">
                     <div class="page-text-container last-page-text">
                         <p>Happy Birthday jaanu,
-You know what I say.... You deserve everything in this world❤. Entha random ga kalisamo...I got you when I needed you the most. You are that best friend I always wished for. If ppl call me kind, sensible and a good person those credits will be definitely given to you. You don't know how much impact you created on me. Hyd vachina starting lo entha feel aipoyedanno... Entha low lo unna naaku unna only person nuvve... Nuvvu lekapoyunte ah time lo I would be zero till now... You made me so strong. Naa life lo evaru nannu vadilestaru anna bhayam undadu naku... Nannu nenu evvariki prove cheyyakkarledu... Nenu ento cheppukovakkarledu.... Nannu evaro judge chestaru ani feel avvakkarledu....endukante I have you in my life... 
+You know what I say.... You deserve everything in this world❤. Entha random ga kalisamo...I got you when I needed you the most. You are that best friend I always wished for. If ppl call me kind, sensible and a good person those credits will be definitely given to you. You don't know how much impact you created on me. Hyd vachina starting lo entha feel aipoyedanno... Entha low lo unna naaku unna only person nuvve... Nuvvu lekapoyunte ah time lo I would be zero till now... You made me so strong. Naa life lo evaru nannu vadilestaru anna bhayam undadu naku... Nannu nenu evvariki prove cheyyakkarledu... Nenu ento cheppukovakkarledu.... Nannu evaro judge chestaru ani feel avvakkarledu....endukante I have you in my life...
 After seeing so many in my life I got to know that how lucky I am to have you in my life which I already know since starting le😁.
 Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani IIT ki vellina nee lanti frnd dorakakapothe ah IIT kuda waste ae ga... I got you there... You are the only best thing that happened to me in my clg life and till now I feel so proud of having you as my bsf.... You are more like a sister to me.... I always love you.... Okkate bhayam now.... Nee valla naa standards anni soo high🥲. Idk if I can get a person who loves me more than you love me. I love you so much Happy Birthday ❤❤❤</p>
                     </div>
@@ -318,13 +322,13 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
         const leftIndicator = document.getElementById('left-indicator');
         const rightIndicator = document.getElementById('right-indicator');
         let currentPageIndex = 0;
-        const flipDuration = 600; 
+        const flipDuration = 600;
         let isFlipping = false;
 
         // Variables for Swipe Detection
         let touchstartX = 0;
         let touchendX = 0;
-        const swipeThreshold = 50; 
+        const swipeThreshold = 50;
 
         // --- Indicator Logic ---
         function showIndicators() {
@@ -339,7 +343,7 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
                 }, 3000);
             }
         }
-        
+
         // --- Page Navigation Logic (modified to handle blur) ---
         function nextPage() {
             if (currentPageIndex < pages.length - 1 && !isFlipping) {
@@ -357,12 +361,12 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
 
                 oldPage.querySelector('.page-content-background').classList.remove('blurred'); // Ensure previous page is not blurred
 
-                newPage.classList.add('active', 'next-page'); 
-                newPage.style.display = 'flex'; 
-                newPage.offsetWidth; 
+                newPage.classList.add('active', 'next-page');
+                newPage.style.display = 'flex';
+                newPage.offsetWidth;
 
-                oldPage.classList.add('flipping-right'); 
-                newPage.classList.remove('next-page'); 
+                oldPage.classList.add('flipping-right');
+                newPage.classList.remove('next-page');
 
                 setTimeout(() => {
                     oldPage.classList.remove('active', 'flipping-right');
@@ -378,7 +382,7 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
                 const oldPage = pages[currentPageIndex];
                 currentPageIndex--;
                 const newPage = pages[currentPageIndex];
-                
+
                 // Remove blur from the background of the previous page if it was the last page
                 if (oldPage.querySelector('.page-content-background').classList.contains('blurred')) {
                     oldPage.querySelector('.page-content-background').classList.remove('blurred');
@@ -386,10 +390,10 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
 
                 newPage.classList.add('active', 'prev-page');
                 newPage.style.display = 'flex';
-                newPage.offsetWidth; 
+                newPage.offsetWidth;
 
-                oldPage.classList.add('flipping-left'); 
-                newPage.classList.remove('prev-page'); 
+                oldPage.classList.add('flipping-left');
+                newPage.classList.remove('prev-page');
 
                 setTimeout(() => {
                     oldPage.classList.remove('active', 'flipping-left');
@@ -402,7 +406,7 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
                 }, flipDuration);
             }
         }
-        
+
         // --- Input Handlers (unchanged) ---
         comicBook.addEventListener('touchstart', e => {
             if (isFlipping) return;
@@ -428,7 +432,7 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
             } else {
                 nextPage();
             }
-            touchstartX = 0; 
+            touchstartX = 0;
             touchendX = 0;
         }
 
@@ -436,21 +440,21 @@ Ee Clg lo nenu donation katti mareee enduku join ayyanu ra babu Anukunta kani II
             if (isFlipping) return;
             const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
             if (clientX === null) return;
-            
+
             const containerRect = comicBook.getBoundingClientRect();
             const clickXRelative = clientX - containerRect.left;
             const center = containerRect.width / 2;
-            const margin = containerRect.width * 0.20; 
+            const margin = containerRect.width * 0.20;
 
             if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) {
                 nextPage();
             } else if (clickXRelative < center - margin && currentPageIndex > 0) {
                 prevPage();
             } else if (currentPageIndex === 0) {
-                showIndicators(); 
+                showIndicators();
             }
         }
-        
+
         comicBook.addEventListener('click', handleTap, false);
 
         document.addEventListener('keydown', (e) => {
