@@ -87,7 +87,7 @@
             transition: filter 0.6s ease-in-out; 
         }
 
-        /* 2. CSS FOR BLUR EFFECT */
+        /* CSS for Image Blur on Last Page */
         .page-content-background.blur-background {
             filter: blur(5px); 
         }
@@ -122,7 +122,7 @@
         /* --- Transparent Font with White Border (MODIFIED MARGINS) --- */
         .page-content h3 { 
             margin-top: 0; 
-            margin-bottom: 0; 
+            margin-bottom: 0; /* Remove default margin */
             color: transparent; 
             -webkit-text-stroke: 1px white; 
             text-stroke: 1px white; 
@@ -138,29 +138,29 @@
             font-family: 'Roboto', sans-serif; 
             font-size: 1.1em; 
             line-height: 1.4; 
-            margin: 5px 0; 
+            margin: 5px 0; /* Adjusted margin */
             background-color: transparent; 
             padding: 2px 5px;
             border-radius: 3px;
         }
 
-        /* 3. CSS FOR CALLIGRAPHY FONT AND SIZE */
+        .icon-placeholder { 
+            font-size: 4em; 
+            margin: 15px 0; /* Reduced vertical margin */
+            color: #cc4444; 
+            -webkit-text-stroke: 0; 
+            text-stroke: 0;
+            background-color: transparent !important; 
+        }
+
+        /* 2. CSS for Calligraphy Font, Size, and Line-wrap */
         .page-content p.calligraphy-font {
             font-family: 'Calligraffitti', cursive; 
             font-size: 1.6em; 
             -webkit-text-stroke: 0.8px white; 
             text-stroke: 0.8px white;
             line-height: 1.6;
-            max-width: 80%; 
-        }
-
-        .icon-placeholder { 
-            font-size: 4em; 
-            margin: 15px 0; 
-            color: #cc4444; 
-            -webkit-text-stroke: 0; 
-            text-stroke: 0;
-            background-color: transparent !important; 
+            max-width: 80%; /* Limits line length for better calligraphy readability */
         }
 
         /* Indicator Styling (unchanged) */
@@ -291,7 +291,6 @@
             <div class="page-content">
                 <div class="page-text-container">
                     <h3>PAGE 8: PREPARATIONS</h3>
-                    <p>The final stand is imminent. Gear up!</p>
                 </div>
                 
                 <div class="page-text-container">
@@ -306,7 +305,6 @@
             <div class="page-content">
                 <div class="page-text-container">
                     <h3>PAGE 9: THE CLIMAX</h3>
-                    <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
                 </div>
                 
                 <div class="page-text-container">
@@ -452,3 +450,28 @@
             } else if (clickXRelative < center - margin && currentPageIndex > 0) {
                 prevPage();
             } else if (currentPageIndex === 0) {
+                showIndicators(); 
+            }
+        }
+        
+        comicBook.addEventListener('click', handleTap, false);
+
+        document.addEventListener('keydown', (e) => {
+            if (isFlipping) return;
+            if (e.key === 'ArrowRight') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
+
+        // Initial setup
+        pages.forEach((page, index) => {
+            if (index !== 0) {
+                page.style.display = 'none';
+            }
+        });
+        showIndicators();
+    </script>
+</body>
+</html>
