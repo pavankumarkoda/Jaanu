@@ -1,483 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doodle Comic Reader (Image Backgrounds)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
-    <style>
-        /* --- General Body & Container Styling (E-Reader Look) --- */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0; 
-            font-family: 'Roboto', sans-serif;
-            perspective: 1800px;
-            user-select: none;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doodle Comic Reader (Image Backgrounds)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Body & Container Styling (E-Reader Look) --- */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; 
+            font-family: 'Roboto', sans-serif;
+            perspective: 1800px;
+            user-select: none;
+        }
 
-        .comic-container {
-            position: relative;
-            width: 90%; 
-            max-width: 450px; 
-            height: 90vh;
-            max-height: 700px;
-            border-radius: 12px; 
-            background-color: #966f33; 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            overflow: visible; 
-            cursor: pointer; 
-            padding: 15px; 
-            box-sizing: border-box;
-        }
-        
-        /* -------------------------------------- */
-        /* Core Page-Flip CSS */
-        /* -------------------------------------- */
-        .comic-page {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            width: calc(100% - 30px); /* Adjusted to fit inside padding */
-            height: calc(100% - 30px); /* Adjusted to fit inside padding */
-            display: none; 
-            box-sizing: border-box;
-            background-color: transparent; 
-            border-radius: 8px; 
-            transform-origin: left center;
-            transform: rotateY(0deg); 
-            transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
-            backface-visibility: hidden;
-            z-index: 1; 
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
-        }
+        .comic-container {
+            position: relative;
+            width: 90%; 
+            max-width: 450px; 
+            height: 90vh;
+            max-height: 700px;
+            
+            border-radius: 12px; 
+            background-color: #966f33; 
+            
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            
+            overflow: visible; 
+            cursor: pointer; 
+            padding: 15px; 
+            box-sizing: border-box;
+        }
+        
+        /* -------------------------------------- */
+        /* Core Page-Flip CSS (Unchanged) */
+        /* -------------------------------------- */
+        .comic-page {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: calc(100% - 30px); 
+            height: calc(100% - 30px);
+            display: none; 
+            box-sizing: border-box;
+            background-color: transparent; 
+            border-radius: 8px; 
+            
+            transform-origin: left center;
+            transform: rotateY(0deg); 
+            transition: transform 0.6s cubic-bezier(0.5, 0.1, 0.3, 1.1); 
+            backface-visibility: hidden;
+            z-index: 1; 
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+        }
 
-        .comic-page.active {
-            display: flex;
-            transform: rotateY(0deg); 
-            z-index: 2; 
-        }
+        .comic-page.active {
+            display: flex;
+            transform: rotateY(0deg); 
+            z-index: 2; 
+        }
 
-        .comic-page.flipping-right { transform-origin: left bottom; transform: rotateY(-180deg); z-index: 10; }
-        .comic-page.active.next-page { transform-origin: left bottom; transform: rotateY(180deg); }
-        .comic-page.flipping-left { transform-origin: right bottom; transform: rotateY(180deg); z-index: 10; }
-        .comic-page.active.prev-page { transform-origin: right bottom; transform: rotateY(-180deg); }
+        .comic-page.flipping-right { transform-origin: left bottom; transform: rotateY(-180deg); z-index: 10; }
+        .comic-page.active.next-page { transform-origin: left bottom; transform: rotateY(180deg); }
+        .comic-page.flipping-left { transform-origin: right bottom; transform: rotateY(180deg); z-index: 10; }
+        .comic-page.active.prev-page { transform-origin: right bottom; transform: rotateY(-180deg); }
 
-        /* -------------------------------------- */
-        /* Background Image & Content Styling */
-        /* -------------------------------------- */
-        .page-content-background {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 6px; 
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: cover; 
-            background-color: #fffaf0; 
-            opacity: 0.8; 
-            z-index: 5; 
-        }
+        /* -------------------------------------- */
+        /* Background Image & Content Styling (MODIFIED) */
+        /* -------------------------------------- */
+        
+        .page-content-background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 6px; 
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover; 
+            background-color: #fffaf0; 
+            opacity: 0.8; 
+            z-index: 5; 
+        }
 
-        .page-content {
-            position: relative;
-            width: 100%; height: 100%;
-            display: flex; 
-            flex-direction: column;
-            justify-content: space-between; 
-            padding: 10% 25px; 
-            box-sizing: border-box;
-            border: 1px solid #333; 
-            border-radius: 6px; 
-            background-color: transparent; 
-            z-index: 10; 
-        }
+        .page-content {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex; 
+            flex-direction: column;
+            /* Pushes top elements to top, bottom elements to bottom */
+            justify-content: space-between; 
+            
+            /* Add significant padding for 10% corner spacing */
+            padding: 10% 25px; 
+            box-sizing: border-box;
+            
+            border: 1px solid #333; 
+            border-radius: 6px; 
+            background-color: transparent; 
+            z-index: 10; 
+        }
+        
+        /* NEW: Container to group and center text blocks horizontally */
+        .page-text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%; 
+        }
+        
+        /* --- Transparent Font with White Border (MODIFIED MARGINS) --- */
+        .page-content h3 { 
+            margin-top: 0; 
+            margin-bottom: 0; /* Remove default margin */
+            color: transparent; 
+            -webkit-text-stroke: 1px white; 
+            text-stroke: 1px white; 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.2em; 
+            text-shadow: none; 
+        }
+        
+        .page-content p { 
+            color: transparent; 
+            -webkit-text-stroke: 0.5px white; 
+            text-stroke: 0.5px white;
+            font-family: 'Roboto', sans-serif; 
+            font-size: 1.1em; 
+            line-height: 1.4; 
+            margin: 5px 0; /* Adjusted margin */
+            background-color: transparent; 
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
 
-        .page-text-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 100%; 
-        }
+        .icon-placeholder { 
+            font-size: 4em; 
+            margin: 15px 0; /* Reduced vertical margin */
+            color: #cc4444; 
+            -webkit-text-stroke: 0; 
+            text-stroke: 0;
+            background-color: transparent !important; 
+        }
 
-        .page-content h3 { 
-            margin-top: 0; 
-            margin-bottom: 0;
-            color: transparent; 
-            -webkit-text-stroke: 1px white; 
-            text-stroke: 1px white; 
-            font-family: 'Bangers', cursive; 
-            font-size: 2.2em; 
-            text-shadow: none; 
-        }
+        /* Indicator Styling (unchanged) */
+        .swipe-indicator {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out;
+            z-index: 30; pointer-events: none;
+            background-color: rgba(0, 0, 0, 0.7); 
+            color: white; border-radius: 6px; 
+            padding: 5px 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
 
-        .page-content p { 
-            color: transparent; 
-            -webkit-text-stroke: 0.5px white; 
-            text-stroke: 0.5px white;
-            font-family: 'Roboto', sans-serif; 
-            font-size: 1.1em; 
-            line-height: 1.4; 
-            margin: 5px 0;
-            background-color: transparent; 
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-
-        .icon-placeholder { 
-            font-size: 4em; 
-            margin: 15px 0; 
-            color: #cc4444; 
-            -webkit-text-stroke: 0; 
-            text-stroke: 0;
-            background-color: transparent !important; 
-        }
-
-        .swipe-indicator {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            font-size: 3em; opacity: 0; transition: opacity 0.3s ease-in-out;
-            z-index: 30; pointer-events: none;
-            background-color: rgba(0, 0, 0, 0.7); 
-            color: white; border-radius: 6px; 
-            padding: 5px 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            font-family: sans-serif; /* Ensure indicator text is readable */
-        }
-
-        .swipe-indicator.show { opacity: 0.9; font-size: 3em; }
-        #left-indicator { left: 25px; } 
-        #right-indicator { right: 25px; }
-
-        /* --- Final Page Special Style --- */
-        .comic-page[data-page="10"] .page-content-background {
-            filter: blur(8px) brightness(0.6);
-            opacity: 1;
-        }
-
-        .comic-page[data-page="10"] .page-content {
-            background-color: rgba(0, 0, 0, 0.4);
-            border: none;
-            justify-content: center;
-            text-align: center;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        .comic-page[data-page="10"] h3 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5em;
-            color: #fff;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-            margin-bottom: 20px;
-            -webkit-text-stroke: 0; /* Clear text-stroke for final page */
-            text-stroke: 0;
-        }
-
-        .comic-page[data-page="10"] p {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.8em;
-            color: #fff;
-            line-height: 1.6;
-            margin: 10px 0;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
-            -webkit-text-stroke: 0; /* Clear text-stroke for final page */
-            text-stroke: 0;
-            background-color: transparent !important;
-        }
-
-        .comic-page[data-page="10"] .icon-placeholder {
-            font-size: 5em;
-            color: #fff;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+        .swipe-indicator.show { opacity: 0.9; font-size: 3em; }
+        #left-indicator { left: 25px; } 
+        #right-indicator { right: 25px; }
+    </style>
 </head>
 <body>
 
-    <div class="comic-container" id="comic-book"> 
-        
-        <div class="comic-page active" data-page="1">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=1');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 1</div>
-                <div class="page-text-container">
-                    <h3>The Beginning</h3>
-                    <p>Every story starts with a spark — an idea that lights the path ahead.</p>
-                </div>
-                <div class="icon-placeholder">🌅</div>
-            </div>
-        </div>
+    <div class="comic-container" id="comic-book">
+        <span id="left-indicator" class="swipe-indicator">👈</span>
+        <span id="right-indicator" class="swipe-indicator">👉</span>
 
-        <div class="comic-page" data-page="2">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=2');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 2</div>
-                <div class="page-text-container">
-                    <h3>First Steps</h3>
-                    <p>With courage and hope, the first step begins — though the path is unknown.</p>
-                </div>
-                <div class="icon-placeholder">🚶‍♂️</div>
-            </div>
-        </div>
+        <div class="comic-page active" data-page="1">
+            <div class="page-content-background" style="background-image: url('unnamed.jpg?random=1');"></div>
+            <div class="page-content">
+                
+                <div class="page-text-container">
+                    <h3>HAPPY BIRTHDAY JAANUUU</h3>
+                    <p class="icon-placeholder">❤️</p>
+                </div>
+                
+                <!-- <div class="page-text-container">
+                    <p>Our hero's journey is about to unfold...</p>
+                </div> -->
+            </div>
+        </div>
 
-        <div class="comic-page" data-page="3">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=3');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 3</div>
-                <div class="page-text-container">
-                    <h3>Challenges Arise</h3>
-                    <p>Every journey brings storms — testing strength and purpose.</p>
-                </div>
-                <div class="icon-placeholder">⚡</div>
-            </div>
-        </div>
+        <div class="comic-page" data-page="2">
+            <div class="page-content-background" style="background-image: url('');"></div>
+            <div class="page-content">
+                <div class="page-text-container" >
+                    <h3>The awkward hand shake</h3>
+                    <p>The day I made you feel soo awkward with my edditanam. </p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">💕</p>
+                    <p>The time for action is now.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="3">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=3');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 3: A NEW ALLY</h3>
+                    <p>KAPOW! A surprising friend steps out of the shadows.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🤝</p>
+                    <p>They must work together to succeed.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="4">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=4');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 4: THE OBSTACLE</h3>
+                    <p>A massive roadblock appears in their path!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🚧</p>
+                    <p>This challenge requires clever thinking.</p>
+                </div>
+            </div>
+        </div>
 
-        <div class="comic-page" data-page="4">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=4');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 4</div>
-                <div class="page-text-container">
-                    <h3>Allies</h3>
-                    <p>Even heroes need companions — strength grows in unity.</p>
-                </div>
-                <div class="icon-placeholder">🤝</div>
-            </div>
-        </div>
+        <div class="comic-page" data-page="5">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=5');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 5: TURNING POINT</h3>
+                    <p>Halfway there! A difficult decision must be made.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🧭</p>
+                    <p>The fate of the mission hangs in the balance.</p>
+                </div>
+            </div>
+        </div>
 
-        <div class="comic-page" data-page="5">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=5');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 5</div>
-                <div class="page-text-container">
-                    <h3>The Quest Deepens</h3>
-                    <p>Hidden truths begin to unfold — every clue leads closer to destiny.</p>
-                </div>
-                <div class="icon-placeholder">🗺️</div>
-            </div>
-        </div>
+        <div class="comic-page" data-page="6">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=6');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 6: THE CHASE</h3>
+                    <p>VROOM! A high-speed pursuit through the city streets!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🏎️</p>
+                    <p>They can't afford to slow down now.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="7">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=7');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 7: THE SECRET REVEALED</h3>
+                    <p>The mask comes off! The true enemy is finally known.</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🎭</p>
+                    <p>A twist no one saw coming!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comic-page" data-page="8">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=8');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 8: PREPARATIONS</h3>
+                    <p>The final stand is imminent. Gear up!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">🛡️</p>
+                    <p>One last chance to train and strategize.</p>
+                </div>
+            </div>
+        </div>
 
-        <div class="comic-page" data-page="6">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=6');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 6</div>
-                <div class="page-text-container">
-                    <h3>Falling & Rising</h3>
-                    <p>Defeat teaches more than victory — resilience builds heroes.</p>
-                </div>
-                <div class="icon-placeholder">🔥</div>
-            </div>
-        </div>
+        <div class="comic-page" data-page="9">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=9');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 9: THE CLIMAX</h3>
+                    <p>CRASH! The ultimate battle has begun. Power vs. Power!</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">💥</p>
+                    <p>The tension is unbearable!</p>
+                </div>
+            </div>
+        </div>
 
-        <div class="comic-page" data-page="7">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=7');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 7</div>
-                <div class="page-text-container">
-                    <h3>The Turning Point</h3>
-                    <p>A realization dawns — the power was within all along.</p>
-                </div>
-                <div class="icon-placeholder">💡</div>
-            </div>
-        </div>
+        <div class="comic-page" data-page="10">
+            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=10');"></div>
+            <div class="page-content">
+                <div class="page-text-container">
+                    <h3>PAGE 10: VICTORY & CONCLUSION</h3>
+                    <p>The dust settles. The world is safe. **Tap or swipe right to restart!**</p>
+                </div>
+                
+                <div class="page-text-container">
+                    <p class="icon-placeholder">✅</p>
+                    <p>Thanks for reading! To be continued...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="comic-page" data-page="8">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=8');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 8</div>
-                <div class="page-text-container">
-                    <h3>Final Battle</h3>
-                    <p>Everything leads to this moment — courage meets fate head-on.</p>
-                </div>
-                <div class="icon-placeholder">⚔️</div>
-            </div>
-        </div>
+    <script>
+        const pages = document.querySelectorAll('.comic-page');
+        const comicBook = document.getElementById('comic-book');
+        const leftIndicator = document.getElementById('left-indicator');
+        const rightIndicator = document.getElementById('right-indicator');
+        let currentPageIndex = 0;
+        const flipDuration = 600; 
+        let isFlipping = false;
 
-        <div class="comic-page" data-page="9">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=9');"></div>
-            <div class="page-content">
-                <div class="page-number">Page 9</div>
-                <div class="page-text-container">
-                    <h3>Peace Returns</h3>
-                    <p>Silence fills the air — not of loss, but of calm victory.</p>
-                </div>
-                <div class="icon-placeholder">🌙</div>
-            </div>
-        </div>
+        // Variables for Swipe Detection
+        let touchstartX = 0;
+        let touchendX = 0;
+        const swipeThreshold = 50; 
 
-        <div class="comic-page" data-page="10">
-            <div class="page-content-background" style="background-image: url('https://picsum.photos/400/600?random=10');"></div>
-            <div class="page-content">
-                <div class="page-text-container">
-                    <h3>THE END — BUT NEVER REALLY</h3>
-                    <p>As the final page turns, our story may pause...<br>
-                        but the laughter, the memories, and the love — live forever.<br>
-                        Until our next adventure together. 💫</p>
-                    <p class="icon-placeholder">❤️</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="swipe-indicator" id="left-indicator">◀️ Swipe Left</div>
-    <div class="swipe-indicator" id="right-indicator">Swipe Right ▶️</div>
+        // --- Indicator Logic ---
+        function showIndicators() {
+            leftIndicator.classList.remove('show');
+            rightIndicator.classList.remove('show');
 
-    <script>
-        const pages = document.querySelectorAll('.comic-page');
-        // Corrected selector to match the new ID
-        const comicBook = document.getElementById('comic-book');
-        // Added selectors for the indicators
-        const leftIndicator = document.getElementById('left-indicator');
-        const rightIndicator = document.getElementById('right-indicator');
-        let currentPageIndex = 0;
-        const flipDuration = 600; 
-        let isFlipping = false;
-        let touchstartX = 0;
-        let touchendX = 0;
-        const swipeThreshold = 50; 
+            if (currentPageIndex === 0) {
+                rightIndicator.classList.add('show');
 
-        function showIndicators() {
-            if (!leftIndicator || !rightIndicator) return;
-            
-            leftIndicator.classList.remove('show');
-            rightIndicator.classList.remove('show');
-            
-            if (currentPageIndex === 0) {
-                // Show right indicator on the first page
-                rightIndicator.classList.add('show');
-                setTimeout(() => { rightIndicator.classList.remove('show'); }, 3000);
-            } else if (currentPageIndex === pages.length - 1) {
-                // Show left indicator on the last page
-                leftIndicator.classList.add('show');
-                setTimeout(() => { leftIndicator.classList.remove('show'); }, 3000);
-            }
-        }
+                setTimeout(() => {
+                    rightIndicator.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        // --- Page Navigation Logic (unchanged) ---
+        function nextPage() {
+            if (currentPageIndex < pages.length - 1 && !isFlipping) {
+                isFlipping = true;
+                const oldPage = pages[currentPageIndex];
+                currentPageIndex++;
+                const newPage = pages[currentPageIndex];
 
-        function nextPage() {
-            if (currentPageIndex < pages.length - 1 && !isFlipping) {
-                isFlipping = true;
-                const oldPage = pages[currentPageIndex];
-                currentPageIndex++;
-                const newPage = pages[currentPageIndex];
-                
-                // Prepare the new page to be flipped
-                newPage.classList.add('active', 'next-page'); 
-                newPage.style.display = 'flex';
-                newPage.offsetWidth; // Force reflow to register 'prev-page' class immediately
-                
-                // Start the flip animation on the old page
-                oldPage.classList.add('flipping-right');
-                
-                // Remove the setup class immediately after reflow
-                newPage.classList.remove('next-page');
-                
-                setTimeout(() => {
-                    // Cleanup classes after the animation finishes
-                    oldPage.classList.remove('active', 'flipping-right');
-                    oldPage.style.display = 'none';
-                    isFlipping = false;
-                    showIndicators();
-                }, flipDuration);
-            }
-        }
+                newPage.classList.add('active', 'next-page'); 
+                newPage.style.display = 'flex'; 
+                newPage.offsetWidth; 
 
-        function prevPage() {
-            if (currentPageIndex > 0 && !isFlipping) {
-                isFlipping = true;
-                const oldPage = pages[currentPageIndex];
-                currentPageIndex--;
-                const newPage = pages[currentPageIndex];
-                
-                // Prepare the new page to be flipped
-                newPage.classList.add('active', 'prev-page');
-                newPage.style.display = 'flex';
-                newPage.offsetWidth; // Force reflow
-                
-                // Start the flip animation on the old page
-                oldPage.classList.add('flipping-left');
-                
-                // Remove the setup class immediately after reflow
-                newPage.classList.remove('prev-page');
-                
-                setTimeout(() => {
-                    // Cleanup classes after the animation finishes
-                    oldPage.classList.remove('active', 'flipping-left');
-                    oldPage.style.display = 'none';
-                    isFlipping = false;
-                    showIndicators();
-                }, flipDuration);
-            }
-        }
+                oldPage.classList.add('flipping-right'); 
+                newPage.classList.remove('next-page'); 
 
-        comicBook.addEventListener('touchstart', e => {
-            if (isFlipping) return;
-            touchstartX = e.changedTouches[0].screenX;
-        }, false);
+                setTimeout(() => {
+                    oldPage.classList.remove('active', 'flipping-right');
+                    oldPage.style.display = 'none';
+                    isFlipping = false;
+                }, flipDuration);
+            }
+        }
 
-        comicBook.addEventListener('touchend', e => {
-            if (isFlipping) return;
-            touchendX = e.changedTouches[0].screenX;
-            handleGesture(e);
-        }, false);
+        function prevPage() {
+            if (currentPageIndex > 0 && !isFlipping) {
+                isFlipping = true;
+                const oldPage = pages[currentPageIndex];
+                currentPageIndex--;
+                const newPage = pages[currentPageIndex];
+                
+                newPage.classList.add('active', 'prev-page');
+                newPage.style.display = 'flex';
+                newPage.offsetWidth; 
 
-        function handleGesture(e) {
-            const deltaX = touchendX - touchstartX;
-            if (Math.abs(deltaX) < swipeThreshold) {
-                handleTap(e);
-                return;
-            }
-            // Positive deltaX means swiping right (prev page)
-            if (deltaX > 0) prevPage();
-            // Negative deltaX means swiping left (next page)
-            else nextPage();
-            touchstartX = 0; 
-            touchendX = 0;
-        }
+                oldPage.classList.add('flipping-left'); 
+                newPage.classList.remove('prev-page'); 
 
-        function handleTap(e) {
-            if (isFlipping) return;
-            
-            // Determine the click/tap location
-            const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
-            if (clientX === null) return;
-            
-            // Use e.currentTarget to get the element that the listener is attached to
-            const containerRect = e.currentTarget.getBoundingClientRect();
-            const clickXRelative = clientX - containerRect.left;
-            
-            const center = containerRect.width / 2;
-            const margin = containerRect.width * 0.20; 
-            
-            // Click/Tap on the right side of the book (outside the central margin)
-            if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) nextPage();
-            // Click/Tap on the left side of the book (outside the central margin)
-            else if (clickXRelative < center - margin && currentPageIndex > 0) prevPage();
-            // Click/Tap in the center (show indicators)
-            else showIndicators(); 
-        }
+                setTimeout(() => {
+                    oldPage.classList.remove('active', 'flipping-left');
+                    oldPage.style.display = 'none';
+                    isFlipping = false;
 
-        comicBook.addEventListener('click', handleTap, false);
+                    if (currentPageIndex === 0) {
+                        showIndicators();
+                    }
+                }, flipDuration);
+            }
+        }
+        
+        // --- Input Handlers (unchanged) ---
+        comicBook.addEventListener('touchstart', e => {
+            if (isFlipping) return;
+            touchstartX = e.changedTouches[0].screenX;
+        }, false);
 
-        document.addEventListener('keydown', (e) => {
-            if (isFlipping) return;
-            if (e.key === 'ArrowRight') nextPage();
-            else if (e.key === 'ArrowLeft') prevPage();
-        });
+        comicBook.addEventListener('touchend', e => {
+            if (isFlipping) return;
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture(e);
+        }, false);
 
-        // Initialize: Ensure only the first page is visible and active on load
-        pages.forEach((page, index) => {
-            page.style.display = index === 0 ? 'flex' : 'none';
-            if (index === 0) page.classList.add('active');
-            else page.classList.remove('active');
-        });
-        
-        // Initial call to show indicators
-        showIndicators();
-    </script>
+        function handleGesture(e) {
+            const deltaX = touchendX - touchstartX;
+
+            if (Math.abs(deltaX) < swipeThreshold) {
+                handleTap(e);
+                return;
+            }
+
+            if (deltaX > 0) {
+                prevPage();
+            } else {
+                nextPage();
+            }
+            touchstartX = 0; 
+            touchendX = 0;
+        }
+
+        function handleTap(e) {
+            if (isFlipping) return;
+            const clientX = e.clientX || (e.changedTouches.length > 0 ? e.changedTouches[0].clientX : null);
+            if (clientX === null) return;
+            
+            const containerRect = comicBook.getBoundingClientRect();
+            const clickXRelative = clientX - containerRect.left;
+            const center = containerRect.width / 2;
+            const margin = containerRect.width * 0.20; 
+
+            if (clickXRelative > center + margin && currentPageIndex < pages.length - 1) {
+                nextPage();
+            } else if (clickXRelative < center - margin && currentPageIndex > 0) {
+                prevPage();
+            } else if (currentPageIndex === 0) {
+                showIndicators(); 
+            }
+        }
+        
+        comicBook.addEventListener('click', handleTap, false);
+
+        document.addEventListener('keydown', (e) => {
+            if (isFlipping) return;
+            if (e.key === 'ArrowRight') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
+
+        // Initial setup
+        pages.forEach((page, index) => {
+            if (index !== 0) {
+                page.style.display = 'none';
+            }
+        });
+        showIndicators();
+    </script>
 </body>
 </html>
+
+last page full para and font and make that image blur and font caligrophy
